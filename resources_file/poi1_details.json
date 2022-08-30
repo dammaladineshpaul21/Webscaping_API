@@ -1,0 +1,176 @@
+{
+  "name": {
+    "(en-us/st)": "Mattresses For Less",
+    "(en-gb/st)": "Mattresses Less",
+    "(en-ca/st)": "Mattresses For Less",
+    "(en/st)": "Mattresses For Less",
+    "(global/st)": "Mattresses For Less",
+    "(en-br/st)": "For Less"
+  },
+  "urls": [
+    {
+      "url1": "https://www.shopshf.com/",
+      "type1": "HOMEPAGE"
+    },
+    {
+      "url2": "https://www.mattressesforless.net/about",
+      "type2": "HOMEPAGE"
+    },
+    {
+      "url3": "https://www.mattressesforless.net/about",
+      "type3": "WITH_HOURS"
+    },
+    {
+      "url4": "https://www.facebook.com/munna.dammala",
+      "type4": "FACEBOOK"
+    },
+    {
+      "url5": "https://www.instagram.com/munna.dammala",
+      "type5": "OTHER"
+    }
+  ],
+  "address": {
+    "(global/st)": [
+      {
+        "address": {
+          "formattedAddressline": [
+            "5908 North Fwy",
+            "Houston, TX 77076",
+            "United States"
+          ],
+          "structuredAddress": {
+            "country": "United States",
+            "countryCode": "US",
+            "administrativeArea": "North Carolina",
+            "aministrativeAreaCode": "NC",
+            "subAdministrativeArea": "Vance County",
+            "locatlity": "Houston",
+            "thoroughfare": "US-1",
+            "subThorougfare": "1356",
+            "fullThoroughfare": "1356 US-1"
+          }
+        }
+      }
+    ],
+    "(en-us/st)": [
+      {
+        "address": {
+          "formattedAddressline": [
+            "5900 North Fwy",
+            "Houston, TX 77076",
+            "United States"
+          ],
+          "structuredAddress": {
+            "country": "United States",
+            "countryCode": "US",
+            "administrativeArea": "North Carolina",
+            "aministrativeAreaCode": "NC",
+            "subAdministrativeArea": "Vance County",
+            "locatlity": "Houston",
+            "thoroughfare": "US-1",
+            "subThorougfare": "1356",
+            "fullThoroughfare": "1356 US-1"
+          }
+        }
+      }
+    ],
+    "(en-th/st)": [
+      {
+        "address": {
+          "formattedAddressline": [
+            "5900 North Fwy",
+            "Houston, TX 77076",
+            "United States"
+          ],
+          "structuredAddress": {
+            "country": "United States",
+            "countryCode": "US",
+            "administrativeArea": "North Carolina",
+            "aministrativeAreaCode": "NC",
+            "subAdministrativeArea": "Vance County",
+            "locatlity": "Houston",
+            "thoroughfare": "US-1",
+            "subThorougfare": "1356",
+            "fullThoroughfare": "1356 US-1"
+          }
+        }
+      }
+    ],
+    "(en-ca/st)": [
+      {
+        "address": {
+          "formattedAddressline": [
+            "5900 North Fwy",
+            "Houston, TX 77076",
+            "United States"
+          ],
+          "structuredAddress": {
+            "country": "United States",
+            "countryCode": "US",
+            "administrativeArea": "North Carolina",
+            "aministrativeAreaCode": "NC",
+            "subAdministrativeArea": "Vance County",
+            "locatlity": "Houston",
+            "thoroughfare": "US-1",
+            "subThorougfare": "1356",
+            "fullThoroughfare": "1356 US-1"
+          }
+        }
+      }
+    ],
+    "(en-gb/st)": [
+      {
+        "address": {
+          "formattedAddressline": [
+            "5900 North Fwy",
+            "Houston, TX 77076",
+            "United States"
+          ],
+          "structuredAddress": {
+            "country": "United States",
+            "countryCode": "US",
+            "administrativeArea": "North Carolina",
+            "aministrativeAreaCode": "NC",
+            "subAdministrativeArea": "Vance County",
+            "locatlity": "Houston",
+            "thoroughfare": "US-1",
+            "subThorougfare": "1356",
+            "fullThoroughfare": "1356 US-1"
+          }
+        }
+      }
+    ],
+    "(en-au/st)": [
+      {
+        "address": {
+          "formattedAddressline": [
+            "5900 North Fwy",
+            "Houston, TX 77076",
+            "United States"
+          ],
+          "structuredAddress": {
+            "country": "United States",
+            "countryCode": "US",
+            "administrativeArea": "North Carolina",
+            "aministrativeAreaCode": "NC",
+            "subAdministrativeArea": "Vance County",
+            "locatlity": "Houston",
+            "thoroughfare": "US-1",
+            "subThorougfare": "1356",
+            "fullThoroughfare": "1356 US-1"
+          }
+        }
+      }
+    ]
+  },
+  "phone_number": [
+    {
+    "phone1": "+17136997818",
+    "type": "PRIMARY"
+    },
+    {
+    "phone2": "+17136997818",
+    "type": "PRIMARY"
+    }
+  ]
+}
