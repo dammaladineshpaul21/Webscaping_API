@@ -1,20 +1,3 @@
-name = [
-    {
-        "(en-us/st)": "Signature Home Furniture"
-    },
-    {
-        "(en-ca/st)": "Signature Home Furniture"
-    },
-    {
-        "(en-th/st)": "Signature Home Furniture"
-    },
-    {
-        "(en/st)": "Signature Home Furniture"
-    },
-    {
-        "(global/st)": "Signature Home Furniture"
-    }
-]
-
-get_v = [i for i in name][0]
-print(get_v.get("(en-ca/st)"))
+phone_number = "+17912254492"
+make_pattren = [phone_number[2:5], phone_number[5:8], phone_number[8::]]
+print(make_pattren)

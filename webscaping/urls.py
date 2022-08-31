@@ -7,6 +7,7 @@ import json
 import numpy as np
 import itertools
 
+
 # class Url_object_main:
 #
 #     def __init__(self, read_file):
@@ -51,7 +52,7 @@ class URLs_info():
             copyrighttexts = tag.parent.text
             get_name.append(copyrighttexts)
         get_name.append(soup.title.string)
-        return get_name[0].strip()
+        return set(get_name[0].strip().split(" "))
 
     def get_all_urls(self):
         """GET all the link in the Website"""
@@ -59,15 +60,21 @@ class URLs_info():
             soup = BeautifulSoup(requests.get(self.urls).content, 'html.parser')
             urls = [link.get('href') for link in soup.find_all('a')]
             urls_contact = [i for i in set([get_specific_url for get_specific_url in set(urls) \
-                                if "location" in str(get_specific_url) or "contact" in str(get_specific_url) \
-                                or "about" in str(get_specific_url) \
-                                or "main" in str(get_specific_url)])]
-            pattern = re.compile(r"^[a-z]")
-            if len([i for i in urls_contact if re.compile("^/").findall((str(i)))]) >= 1:
-                get_d = ["/" + i for i in urls_contact if pattern.findall(str(i))]
-                urls_contact2 = [str(self.urls)+"/"+str(i[1::]) for i in itertools.chain(urls_contact,get_d) \
-                             if str(i).startswith("/")]
-                get_filter_urls = [i for i in list(map(lambda i: i if str(i).startswith("http") else None, itertools.chain(urls_contact, urls_contact2))) \
+                                            if "location" in str(get_specific_url) or "contact" in str(get_specific_url) \
+                                            or "about" in str(get_specific_url) \
+                                            or "facebook" in str(get_specific_url) \
+                                            or "main" in str(get_specific_url)])]
+
+            if len([i for i in urls_contact if re.compile("^[a-z]").findall((str(i)))]) >= 1:
+                get_d = [None if re.compile(f"http").findall(str(i)) or re.compile(f"/").findall(str(i)) else "/"+i for i in urls_contact]
+                    # if re.compile(f"http").findall(str(i)):
+                    #     pass
+                    # else:
+                    #     get_d.append(i)
+                urls_contact2 = [str(self.urls) + "/" + str(i[1::]) for i in itertools.chain(urls_contact, get_d) \
+                                 if str(i).startswith("/")]
+                get_filter_urls = [i for i in list(map(lambda i: i if str(i).startswith("http") else None,
+                                                       itertools.chain(urls_contact, urls_contact2))) \
                                    if i is not None]
                 get_full_filter_url = [self.urls] + get_filter_urls
                 return get_full_filter_url
@@ -122,6 +129,7 @@ class URLs_info():
             get_num = pattern.findall(str(soup))
             store_number_info.append(get_num)
         comdine_text_value = set([j for i in store_number_info for j in i])
+        comdine_text_value.union(self.extract_the_copyrights())
         return comdine_text_value
 
     def get_phonenumber(self):
@@ -153,5 +161,5 @@ class URLs_info():
 
             return f"Missing/Updating Category {store_category_parents}"
 
-url_object = URLs_info("https://www.lepaindenosancetres.com")
-print(url_object.get_all_text())
+url_object = URLs_info("https://thefinalnail.squarespace.com")
+print(url_object.get_number())
