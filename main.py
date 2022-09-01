@@ -11,21 +11,22 @@ class Varify_name(Resource):
 
     def post(self):
         try:
+            """Payload Section to get the Attributes"""
             parser = reqparse.RequestParser()
             parser.add_argument("url", type=str, required=True, help="This should be a name")
             parser.add_argument("name", action="append", type=str, required=True, help="This should be a name")
-            data = parser.parse_args()
+            data = parser.parse_args()              # Getting access to the variable"
             if str(data.get("url"))[-1] == "/":
                 url_object = URLs_info(str(data.get("url")[0:len(str(data.get("url")))-1]))
             else:
                 url_object = URLs_info(data.get("url"))
-            get_result = []
+            get_result = []                            # Check the top name with the official Website
             for i in str(data["name"][0]).split():
                 if i in list(url_object.get_all_text()):
                     pass
                 else:
                     get_result.append(i)
-            if int(len(get_result)) > 0:
+            if int(len(get_result)) > 0:                # Checks the Already Existing correct name
                 get_correct_name = []
                 get_val = []
                 for i in range(len(data.get("name")) - 1):
@@ -50,6 +51,7 @@ class Varify_name(Resource):
 
 class Find_phonenumber(Resource):
     def post(self):
+        """Phone Number Verfication API, Check the Extact Phone number based on the Input Given to the Funtion"""
         try:
             parser = reqparse.RequestParser()
             parser.add_argument("url", type=str, required=True, help="This should be a name")
@@ -79,6 +81,7 @@ class Find_phonenumber(Resource):
 
 class Get_name(Resource):
     def get(self):
+        """Get the Validation Check's"""
         for i in range(len(Data)):
             return {f"name_{i}": Data}
 
