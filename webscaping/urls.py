@@ -66,11 +66,12 @@ class URLs_info():
                                             or "main" in str(get_specific_url)])]
 
             if len([i for i in urls_contact if re.compile("^[a-z]").findall((str(i)))]) >= 1:
-                get_d = [None if re.compile(f"http").findall(str(i)) or re.compile(f"/").findall(str(i)) else "/"+i for i in urls_contact]
-                    # if re.compile(f"http").findall(str(i)):
-                    #     pass
-                    # else:
-                    #     get_d.append(i)
+                get_d = [None if re.compile(f"http").findall(str(i)) or re.compile(f"/").findall(str(i)) else "/" + i
+                         for i in urls_contact]
+                # if re.compile(f"http").findall(str(i)):
+                #     pass
+                # else:
+                #     get_d.append(i)
                 urls_contact2 = [str(self.urls) + "/" + str(i[1::]) for i in itertools.chain(urls_contact, get_d) \
                                  if str(i).startswith("/")]
                 get_filter_urls = [i for i in list(map(lambda i: i if str(i).startswith("http") else None,
@@ -161,5 +162,20 @@ class URLs_info():
 
             return f"Missing/Updating Category {store_category_parents}"
 
-url_object = URLs_info("https://thefinalnail.squarespace.com")
-print(url_object.get_number())
+
+# url_object = URLs_info("https://www.lepaindenosancetres.com")
+# name = ["The Fil Nail", "Le Pain de nos", "The Final Nail", "Munna Dammala", "Dammala Dinesh Paul"]
+
+# get_correct_name = []
+# get_val = []
+# for i in range(len(name)-1):
+#     for j in str(name[i+1]).split():
+#         if j in list(url_object.get_all_text()):
+#             get_val.append(j)
+#             if len(get_val) == len(str(name[i+1]).split()):
+#                 get_correct_name.append(name[i+1])
+#             else:
+#                 pass
+#         else:
+#             pass
+# print(get_correct_name)
