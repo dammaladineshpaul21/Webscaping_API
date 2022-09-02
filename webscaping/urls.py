@@ -1,3 +1,4 @@
+import multiprocessing
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -6,6 +7,8 @@ import nltk
 import json
 import numpy as np
 import itertools
+import time
+from threading import Thread
 
 
 # class Url_object_main:
@@ -23,7 +26,7 @@ import itertools
 #         raise f"{WindowsError} Page Was not working"
 
 
-class URLs_info():
+class URLs_info:
 
     def __init__(self, urls):
         self.urls = urls
@@ -111,11 +114,11 @@ class URLs_info():
         """Get the DATA from the URL """
         try:
             store_number_info = []
-            for txt in self.get_all_urls():
-                soup = BeautifulSoup(requests.get(txt).text, 'html.parser')
-                pattern = re.compile(r"\d+")
-                get_num = pattern.findall(str(soup))
-                store_number_info.append(get_num)
+            # for txt in self.get_all_urls():
+            soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in self.get_all_urls()]
+            pattern = re.compile(r"\d+")
+            get_num = pattern.findall(str(soup))
+            store_number_info.append(get_num)
             combine_number_val = set([j for i in store_number_info for j in i])
             return combine_number_val
         except Exception as err:
@@ -123,14 +126,17 @@ class URLs_info():
 
     def get_all_text(self):
         """Will Execute all the text retived from the ULR"""
+        # str_time = time.time()
         store_number_info = []
-        for txt in self.get_all_urls():
-            soup = BeautifulSoup(requests.get(txt).text, 'html.parser')
-            pattern = re.compile(r"[A-Za-z]+")
-            get_num = pattern.findall(str(soup))
-            store_number_info.append(get_num)
-        comdine_text_value = set([j for i in store_number_info for j in i])
-        comdine_text_value.union(self.extract_the_copyrights())
+        # for txt in self.get_all_urls():
+        soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in self.get_all_urls()]
+        pattern = re.compile(r"[A-Za-z]+")
+        get_num = pattern.findall(str(np.array(soup)))
+        store_number_info.append(get_num)
+        # comdine_text_value = set([j for i in store_number_info for j in i])
+        comdine_text_value = [j for i in store_number_info for j in i]
+        # comdine_text_value.union(self.extract_the_copyrights())
+        # end_time = time.time()
         return comdine_text_value
 
     def get_phonenumber(self):
@@ -159,23 +165,26 @@ class URLs_info():
                     store_category_parents.append(category_dict['title'][i])
                 except KeyError:
                     pass
-
             return f"Missing/Updating Category {store_category_parents}"
 
 
-# url_object = URLs_info("https://www.lepaindenosancetres.com")
-# name = ["The Fil Nail", "Le Pain de nos", "The Final Nail", "Munna Dammala", "Dammala Dinesh Paul"]
-
-# get_correct_name = []
-# get_val = []
-# for i in range(len(name)-1):
-#     for j in str(name[i+1]).split():
-#         if j in list(url_object.get_all_text()):
-#             get_val.append(j)
-#             if len(get_val) == len(str(name[i+1]).split()):
-#                 get_correct_name.append(name[i+1])
-#             else:
-#                 pass
-#         else:
-#             pass
-# print(get_correct_name)
+# url_object = URLs_info("https://www.cashbackloans.com")
+# print(url_object.get_number())
+# # #     get_data = re.compile("Cashback Loans").findall(" ".join(url_object.get_all_text()))
+# # #
+# # #
+# # # name = ["The Fil Nail", "Le Pain de nos", "The Final Nail", "Munna Dammala", "Dammala Dinesh Paul"]
+# # #
+# # # get_correct_name = []
+# # # get_val = []
+# # # for i in range(len(name)-1):
+# # #     for j in str(name[i+1]).split():
+# # #         if j in list(url_object.get_all_text()):
+# # #             get_val.append(j)
+# # #             if len(get_val) == len(str(name[i+1]).split()):
+# # #                 get_correct_name.append(name[i+1])
+# # #             else:
+# # #                 pass
+# # #         else:
+# # #             pass
+# # # print(get_correct_name)
