@@ -98,5 +98,5 @@ class Varify_name(Resource):
 #
 # th1 = api.add_resource(Find_phonenumber, "/phone_number")
 api.add_resource(Varify_name, "/nameattribute/name")
-if __name__ == "__main__":
+if __name__ == "__main__":  # this is the main file
     app.run(debug=True)
