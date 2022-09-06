@@ -1,3 +1,18 @@
+# from langdetect import detect
+# import pandas as pd
+#
+# with open("resources_file/language_code.json") as file:
+#     read_data = pd.read_json(file)
+#     get_df = pd.DataFrame(read_data)
+#     get_lag_code = detect("Vlkers")
+#
+#
+# if get_df[get_lag_code].to_dict()["name"]:
+#     print(True)
+# else:
+#     print(False)
+import re
+
 # # import pandas as pd
 # # import re
 # # phone_number = "+17912254492"
@@ -61,4 +76,7 @@
 # # if re.compile(get_correct_name[0]).findall(" ".join(url_object.get_all_text())):
 # #     print("Yes")
 # # else:
-# #     print("NO")
+# #     print("NO
+stirng = "Engel & Völkers Federal Way".split()
+for i in stirng[2].split():
+    print(i)

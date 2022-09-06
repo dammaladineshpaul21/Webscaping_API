@@ -1,3 +1,4 @@
+import asyncio
 import multiprocessing
 import requests
 from bs4 import BeautifulSoup
@@ -9,6 +10,7 @@ import numpy as np
 import itertools
 import time
 from threading import Thread
+from googletrans import Translator, constants
 
 
 # class Url_object_main:
@@ -25,19 +27,20 @@ from threading import Thread
 #     except Exception:
 #         raise f"{WindowsError} Page Was not working"
 
-
-class URLs_info:
+class URLs_info(Translator):
 
     def __init__(self, urls):
+        super().__init__()
         self.urls = urls
 
-    def get_access(self):
+    async def get_access(self):
         """This fucntion extract the title name in the Official Website"""
         try:
             if requests.get(self.urls).status_code == 200:
                 try:
                     # making requests instance
                     reqs = requests.get(self.urls)
+                    await asyncio.sleep(1)
                     return reqs
                 except Exception as err:
                     return err
@@ -46,7 +49,7 @@ class URLs_info:
         except Exception as err:
             return f"Something went wrong in funciotn {id(self.get_access)}{err}"
 
-    def extract_the_copyrights(self):
+    async def extract_the_copyrights(self):
         urls = self.urls
         webpage = requests.get(urls)
         soup = BeautifulSoup(webpage.content, 'html.parser')
@@ -55,6 +58,7 @@ class URLs_info:
             copyrighttexts = tag.parent.text
             get_name.append(copyrighttexts)
         get_name.append(soup.title.string)
+        await asyncio.sleep(1)
         return set(get_name[0].strip().split(" "))
 
     def get_all_urls(self):
@@ -67,8 +71,7 @@ class URLs_info:
                                             or "about" in str(get_specific_url) \
                                             or "facebook" in str(get_specific_url) \
                                             or "main" in str(get_specific_url)])]
-
-            if len([i for i in urls_contact if re.compile("^[a-z]").findall((str(i)))]) >= 1:
+            if len([i for i in urls_contact if re.compile("^[a-z]|/").findall((str(i)))]) >= 1:
                 get_d = [None if re.compile(f"http").findall(str(i)) or re.compile(f"/").findall(str(i)) else "/" + i
                          for i in urls_contact]
                 # if re.compile(f"http").findall(str(i)):
@@ -88,7 +91,7 @@ class URLs_info:
         except Exception:
             return f"Invalide URL as been assigned to function [get_the_urls]"
 
-    def get_all_values(self):
+    async def get_all_values(self):
         try:
             get_abt_home_main_page, get_all_location_page = [], []
             for i in self.get_all_urls():
@@ -106,11 +109,12 @@ class URLs_info:
                 # get_txt = [title.strip() for title in soup.text.split()]
                 for title in soup.text.split():
                     store_url_text_info.append(title)
+            # await asyncio.sleep(3)
             return set(store_url_text_info), get_all_location_page
         except Exception as err:
             raise f"Values Has been not generated for URL {err}"
 
-    def get_number(self):
+    async def get_number(self):
         """Get the DATA from the URL """
         try:
             store_number_info = []
@@ -120,36 +124,38 @@ class URLs_info:
             get_num = pattern.findall(str(soup))
             store_number_info.append(get_num)
             combine_number_val = set([j for i in store_number_info for j in i])
+            # await asyncio.sleep(2)
             return combine_number_val
         except Exception as err:
             return f"Number Has been not generated for URL {err}"
 
-    def get_all_text(self):
+    async def get_all_text(self):
         """Will Execute all the text retived from the ULR"""
-        # str_time = time.time()
         store_number_info = []
         # for txt in self.get_all_urls():
         soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in self.get_all_urls()]
-        pattern = re.compile(r"[A-Za-z]+")
-        get_num = pattern.findall(str(np.array(soup)))
+        pattern = re.compile(r"[A-Z'&a-z0-9]+|@|!|-|'|#|&|%")
+        get_num = pattern.findall(str(soup))
         store_number_info.append(get_num)
         # comdine_text_value = set([j for i in store_number_info for j in i])
         comdine_text_value = [j for i in store_number_info for j in i]
         # comdine_text_value.union(self.extract_the_copyrights())
-        # end_time = time.time()
+        await asyncio.sleep(0.10)
         return comdine_text_value
 
-    def get_phonenumber(self):
+    async def get_phonenumber(self):
         store_number_info = []
         for txt in self.get_all_urls():
             soup = BeautifulSoup(requests.get(txt).content, 'html.parser')
             pattern = re.compile(r"\(\d{3}\)|\d{3}-\d{4}|\d{3} \d{4}")
+            # pattern2 = re.compile(r"(\+\d{1,2})?[\s.-]?\d{3}[\s.-]?\d{4}")
             get_num = pattern.findall(str(soup))
             store_number_info.append(get_num)
         comdine_phonenumber_value = set([j for i in store_number_info for j in i])
+        # await asyncio.sleep(1)
         return comdine_phonenumber_value
 
-    def get_category(self):
+    async def get_category(self):
         with open("../resources_file/category.json") as file:
             get_data = json.load(file)
             create_df = pd.DataFrame(get_data, columns=['alias', "title"])
@@ -165,26 +171,17 @@ class URLs_info:
                     store_category_parents.append(category_dict['title'][i])
                 except KeyError:
                     pass
+            # await asyncio.sleep(0.50)
             return f"Missing/Updating Category {store_category_parents}"
 
 
-# url_object = URLs_info("https://www.cashbackloans.com")
-# print(url_object.get_number())
-# # #     get_data = re.compile("Cashback Loans").findall(" ".join(url_object.get_all_text()))
-# # #
-# # #
-# # # name = ["The Fil Nail", "Le Pain de nos", "The Final Nail", "Munna Dammala", "Dammala Dinesh Paul"]
-# # #
-# # # get_correct_name = []
-# # # get_val = []
-# # # for i in range(len(name)-1):
-# # #     for j in str(name[i+1]).split():
-# # #         if j in list(url_object.get_all_text()):
-# # #             get_val.append(j)
-# # #             if len(get_val) == len(str(name[i+1]).split()):
-# # #                 get_correct_name.append(name[i+1])
-# # #             else:
-# # #                 pass
-# # #         else:
-# # #             pass
-# # # print(get_correct_name)
+async def main():
+    url_object = URLs_info("http://www.maytaglaundry.biz")
+    task1 = asyncio.create_task(url_object.get_all_text())
+    task2 = asyncio.create_task(url_object.get_number())
+    task3 = asyncio.create_task(url_object.get_phonenumber())
+    await task1
+    await task2
+    await task3
+
+asyncio.run(main())
