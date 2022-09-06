@@ -43,7 +43,7 @@ def get_all_text(get_all_urls):
     store_number_info = []
     # for txt in self.get_all_urls():
     soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in get_all_urls]
-    pattern = re.compile(r"[A-Z'&!a-z'&!0-9]+|@|!|-|'|#|&|%|A-Z'a-z!")
+    pattern = re.compile(r"[A-Za-z0-9]+|@|!|-|'|#|&|%")
     get_num = pattern.findall(str(soup).strip(), re.LOCALE)
     store_number_info.append(get_num)
     # comdine_text_value = set([j for i in store_number_info for j in i])
@@ -63,6 +63,6 @@ def get_patter_verificaiton(user_name):
 
 
 # str_time = time.time()
-# data_1 = get_all_text(get_all_urls("http://www.federalway.evrealestate.com"))
+# data_1 = get_all_text(get_all_urls("https://www.loblaws.ca"))
 # end_time = time.time()
-# print(" ".join(data_1))
+# print(" ".join(data_1), f"Run- Time {end_time-str_time}")

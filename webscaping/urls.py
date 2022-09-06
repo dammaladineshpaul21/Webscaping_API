@@ -176,12 +176,9 @@ class URLs_info(Translator):
 
 
 async def main():
-    url_object = URLs_info("http://www.maytaglaundry.biz")
+    url_object = URLs_info("https://www.facebook.com/Kokage_bkk-107622257303145/")
     task1 = asyncio.create_task(url_object.get_all_text())
-    task2 = asyncio.create_task(url_object.get_number())
-    task3 = asyncio.create_task(url_object.get_phonenumber())
-    await task1
-    await task2
-    await task3
+    val = await task1
+    print(val)
 
 asyncio.run(main())
