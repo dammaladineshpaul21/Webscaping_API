@@ -1,15 +1,19 @@
-import asyncio
 import re
 from bs4 import BeautifulSoup
 import requests
 import itertools
 import time
+import asyncio
+import aiohttp
 
 
-def get_all_urls(url):
+async def get_all_urls(url):
     """GET all the link in the Website"""
     try:
-        soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, ssl=False) as requs:
+                soup = BeautifulSoup(await requs.text(), 'html.parser')
+        # soup = BeautifulSoup(requests.get(url).text, 'html.parser')
         urls = [link.get('href') for link in soup.find_all('a')]
         urls_contact = [i for i in set([get_specific_url for get_specific_url in set(urls) \
                                         if "location" in str(get_specific_url) or "contact" in str(get_specific_url) \
@@ -30,25 +34,27 @@ def get_all_urls(url):
                                                    itertools.chain(urls_contact, urls_contact2))) \
                                if i is not None]
             get_full_filter_url = [url] + get_filter_urls
+            await asyncio.sleep(0.10)
             return get_full_filter_url
         else:
             get_full_filter_url = [url] + urls_contact
+            await asyncio.sleep(0.25)
             return get_full_filter_url
     except Exception:
         return f"Invalide URL as been assigned to function [get_the_urls]"
 
 
-def get_all_text(get_all_urls):
+async def get_all_text(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
-    # for txt in self.get_all_urls():
-    soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in get_all_urls]
-    pattern = re.compile(r"[A-Za-z0-9]+|@|!|-|'|#|&|%")
+    soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in await get_all_urls]
+    pattern = re.compile(r"[A-Z0-9a-z'&a-z0-9]+|@|!|-|'|#|&|%")
     get_num = pattern.findall(str(soup).strip(), re.LOCALE)
     store_number_info.append(get_num)
     # comdine_text_value = set([j for i in store_number_info for j in i])
     comdine_text_value = [j for i in store_number_info for j in i]
     # comdine_text_value.union(self.extract_the_copyrights())
+    await asyncio.sleep(0.5)
     return comdine_text_value
 
 
@@ -61,8 +67,3 @@ def get_patter_verificaiton(user_name):
     else:
         pass
 
-
-# str_time = time.time()
-# data_1 = get_all_text(get_all_urls("https://www.loblaws.ca"))
-# end_time = time.time()
-# print(" ".join(data_1), f"Run- Time {end_time-str_time}")

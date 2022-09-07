@@ -175,10 +175,3 @@ class URLs_info(Translator):
             return f"Missing/Updating Category {store_category_parents}"
 
 
-async def main():
-    url_object = URLs_info("https://www.facebook.com/Kokage_bkk-107622257303145/")
-    task1 = asyncio.create_task(url_object.get_all_text())
-    val = await task1
-    print(val)
-
-asyncio.run(main())

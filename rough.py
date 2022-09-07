@@ -11,7 +11,6 @@
 #     print(True)
 # else:
 #     print(False)
-import re
 
 # # import pandas as pd
 # # import re
@@ -77,6 +76,3 @@ import re
 # #     print("Yes")
 # # else:
 # #     print("NO
-stirng = "Engel & Völkers Federal Way".split()
-for i in stirng[2].split():
-    print(i)

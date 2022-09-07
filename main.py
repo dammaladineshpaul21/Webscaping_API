@@ -1,3 +1,5 @@
+import asyncio
+
 from flask import Flask, jsonify
 from flask_restful import Resource, Api, reqparse, abort
 from webscaping.url_individual import get_all_text, get_all_urls
@@ -18,25 +20,22 @@ class Varify_name(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument("url", type=str, required=True, help="This should be a name")
             parser.add_argument("name", action="append", type=str, required=True, help="This should be a name")
-            data = parser.parse_args()  # Getting access to the variable"
-            url_object = get_all_text(get_all_urls(data.get("url")))
-            # get_result, non_match, get_correct_name, get_incorrect_name = [], [], [], []
+            # Getting access to the variable
+            data = parser.parse_args()
+            url_object = asyncio.run(get_all_text(get_all_urls(data.get("url"))))
             get_result, non_match, get_correct_name, get_incorrect_name = [], [], [], []
+            # Name verification word by word
             for i in str(data["name"][0]).split():
-                if re.compile(i, flags=0).findall(str(url_object), re.UNICODE):  # https://www.facebook.com/the1933furniturecompany/
+                if re.compile(i, flags=0).findall(str(url_object), re.UNICODE):
                     pass
                 else:
                     get_result.append(i)
+            # Name verification by String
             if re.compile(data["name"][0]).findall(" ".join(url_object)):
                 pass
             else:
                 non_match.append(data["name"][0])
-            # if int(len(get_result)) > 0:  # Checks the Already Existing correct name
-            #     for i in range(len(data["name"])):
-            #         if re.compile(data["name"][i]).findall(" ".join(url_object)):
-            #             get_correct_name.append(data["name"][i])
-            #         else:
-            #             get_incorrect_name.append(data["name"][i])
+            # Name checking all name in the list Correct and Incorrect
             if int(len(get_result)) == 0 and int(len(non_match)) == 0:  # Checks the Already Existing correct name
                 for i in range(len(data["name"])):
                     if re.compile(data["name"][i]).findall(" ".join(url_object)):

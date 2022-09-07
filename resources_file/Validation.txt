@@ -1,0 +1,2 @@
+1. Need to check with the nuber if string contains
+# https://stackoverflow.com/questions/58013968/how-to-fix-beautifulsoup-breaking-asynchronous-execution-of-asyncio-and-aiohttp
