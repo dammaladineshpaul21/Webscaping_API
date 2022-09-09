@@ -68,11 +68,3 @@ def get_patter_verificaiton(user_name):
         pass
 
 
-# async def main():
-#     task1 = get_all_urls("https://www.sarego.gov.it/c024098/zf/index.php/servizi-aggiuntivi/index/index/idtesto/5")
-#     # task1 = asyncio.create_task(get_all_text(get_all_urls("https://www.sarego.gov.it/c024098/zf/index.php/servizi-aggiuntivi/index/index/idtesto/5")))
-#     val = await task1
-#     print(val)
-#
-#
-# asyncio.run(main())
