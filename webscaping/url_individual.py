@@ -68,3 +68,22 @@ def get_patter_verificaiton(user_name):
         pass
 
 
+async def mixed_name(name, get_all_text):
+    get_correct_name = []
+    for i in range(len(name)):
+        if re.compile(str(name[i]).replace(" ", "").lower()).findall(" ".join(get_all_text)):
+            get_correct_name.append(name[i])
+        else:
+            pass
+    await asyncio.sleep(0.50)
+    return get_correct_name
+
+
+# async def main():
+#     task0 = asyncio.create_task(get_all_urls("http://www.policiacivil.rj.gov.br"))
+#     # task1 = asyncio.create_task(get_all_text(task0))
+#     val = await task0
+#     print(val)
+#
+#
+# asyncio.run(main())
