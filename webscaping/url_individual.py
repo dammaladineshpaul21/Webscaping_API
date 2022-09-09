@@ -40,8 +40,8 @@ async def get_all_urls(url):
             get_full_filter_url = [url] + urls_contact
             await asyncio.sleep(0.25)
             return get_full_filter_url
-    except Exception:
-        return f"Invalide URL as been assigned to function [get_the_urls]"
+    except Exception as e:
+        return e
 
 
 async def get_all_text(get_all_urls):
@@ -67,3 +67,12 @@ def get_patter_verificaiton(user_name):
     else:
         pass
 
+
+# async def main():
+#     task1 = get_all_urls("https://www.sarego.gov.it/c024098/zf/index.php/servizi-aggiuntivi/index/index/idtesto/5")
+#     # task1 = asyncio.create_task(get_all_text(get_all_urls("https://www.sarego.gov.it/c024098/zf/index.php/servizi-aggiuntivi/index/index/idtesto/5")))
+#     val = await task1
+#     print(val)
+#
+#
+# asyncio.run(main())

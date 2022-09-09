@@ -156,7 +156,7 @@ class URLs_info(Translator):
         return comdine_phonenumber_value
 
     async def get_category(self):
-        with open("../resources_file/category.json") as file:
+        with open("category.json") as file:
             get_data = json.load(file)
             create_df = pd.DataFrame(get_data, columns=['alias', "title"])
             category_dict = create_df.set_index("alias").to_dict()
