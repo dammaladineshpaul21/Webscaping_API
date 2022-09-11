@@ -1,10 +1,12 @@
 import re
+import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 import itertools
 import time
 import asyncio
 import aiohttp
+import json
 
 
 async def get_all_urls(url):
@@ -79,11 +81,42 @@ async def mixed_name(name, get_all_text):
     return get_correct_name
 
 
+def check_spacial_case(name, file_pass):
+    with open(file_pass) as file:
+        get_data = json.load(file)
+        create_df = pd.DataFrame(get_data, columns=["character", "letter_convertion"])
+        make_table = create_df.set_index("character").to_dict()
+        get_sp_char = [i for i, k in make_table["letter_convertion"].items()]
+        for val in name.split():
+            get_val = [i for i in [None if re.compile(r"[A-Za-z]").findall(i) else i for i in val] if i is not None]
+            get_final_Re = [i for i in list(itertools.chain(*[list(map(lambda x: x if get_val[i] in x else None, \
+                                                                       get_sp_char)) for i in range(len(get_val))])) if
+                            i is not None]
+            for i in range(len(get_final_Re)):
+                name = name.replace(name[name.index(get_val[i])], make_table["letter_convertion"][get_final_Re[i]])
+        return name
+
+        # get_name_split = name.split(" ")
+        # for k in range(len(get_name_split)):
+        #     # get_val = [None if re.compile(r"[A-Za-z]").findall(i) else i for i in name[k]]
+        #     get_val = " ".join([i for i in list(map(lambda x: None if re.compile(r"[A-Za-z]").findall(x) else x,
+        #                                             get_name_split[k].strip())) if i is not None]).strip()
+        #
+        #     store_sp_chr.append(get_val)
+        # get_key_phase = list(itertools.chain(
+        #     *[[i for i in map(lambda x: x if store_sp_chr[i] in x else None, get_sp_char) if i is not None] \
+        #       for i in range(len(store_sp_chr))]))
+        # for i in range(len(get_name_split)):
+        #     filted_name.append(get_name_split[i].replace(get_name_split[i][get_name_split[i].index(store_sp_chr[i])],\
+        #                                                  make_table["letter_convertion"][get_key_phase[i]]))
+        # return store_sp_chr
+
 # async def main():
-#     task0 = asyncio.create_task(get_all_urls("http://www.policiacivil.rj.gov.br"))
-#     # task1 = asyncio.create_task(get_all_text(task0))
-#     val = await task0
+#     task0 = asyncio.create_task(get_all_urls("https://www.scandichotels.dk/hoteller/danmark/kobenhavn/scandic-kodbyen"))
+#     task1 = asyncio.create_task(get_all_text(task0))
+#     val = await task1
 #     print(val)
 #
 #
 # asyncio.run(main())
+#

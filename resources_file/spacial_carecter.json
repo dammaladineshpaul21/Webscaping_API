@@ -1,0 +1,106 @@
+[
+    {
+      "character": "ÁáÀàĂăẮắẰằẴẵẲẳÂâẤấẦầẪẨẩǍǎÅåǺǻÄäǞǟÃãȦȧǠǡĄąĄ́ą́Ą̃ą̃ĀāĀ̀ā̀ẢảȀȁA̋a̋ȂȃẠạẶặẬậḀḁȺⱥᶏẚ",
+      "letter_convertion": "a"
+    },
+    {
+      "character": "ḂḃḄḅḆḇɃƀƁɓᵬᶀ",
+      "letter_convertion": "b"
+    },
+    {
+      "character":"ĆćĈĉČčĊċḈḉƇƈC̈c̈ȻȼÇçꞒꞓ",
+      "letter_convertion": "c"
+    },
+    {
+      "character":"ĎďḊḋḐḑD̦d̦ḌḍḒḓḎḏĐđÐðƉɖƊɗᵭᶁᶑȡ",
+      "letter_convertion": "d"
+    },
+    {
+      "character":" ĔĕḜḝȆȇÊêÊ̄ê̄Ê̌ê̌ỀềẾếỂểỄễỆệẺẻḘḙĚěɆɇĖėĖ́ė́Ė̃ė̃ẸẹËëÈèÈ̩è̩ȄȅÉéÉ̩ĒēḔḕḖḗẼẽḚḛĘęĘ́ę́Ę̃ę̃ȨȩE̩e̩ᶒ",
+      "letter_convertion": "e"
+    },
+    {
+      "character":"ḞḟƑƒᵮᶂ",
+      "letter_convertion": "F"
+    },
+    {
+      "character":"ǴǵǤǥĜĝǦǧĞğĢģƓɠĠġḠḡꞠꞡᶃ",
+      "letter_convertion": "g"
+    },
+    {
+      "character":"ĤĥȞȟĦħḨḩⱧⱨẖẖḤḥḢḣḦḧḪḫꜦꜧ",
+      "letter_convertion": "h"
+    },
+    {
+      "character": "ỊịĭÎîǏǐƗɨÏïḮḯÍíÌìȈȉĮįĮ́Į̃ĪīĪ̀ī̀ᶖỈỉȊȋĨĩḬḭᶤ",
+      "letter_convertion": "i"
+    },
+    {
+      "character":"ĴĵǰɈɉJ̃j̇̃",
+      "letter_convertion": "j"
+    },
+    {
+      "character":"ƘƙꝀꝁḰḱǨǩḲḳĶķᶄⱩⱪḴḵ",
+      "letter_convertion": "k"
+    },
+    {
+      "character":"ĹĺŁłĽľḸḹL̃l̃ĻļĿŀḶḷḺḻḼḽȽƚⱠⱡ",
+      "letter_convertion": "l"
+    },
+    {
+      "character":"ḾḿṀṁṂṃM̃m̃ᵯ",
+      "letter_convertion": "m"
+    },
+    {
+      "character":"ŃńÑñŇňǸǹṄṅṆṇŅņṈṉṊṋꞤꞥᵰᶇ",
+      "letter_convertion": "n"
+    },
+    {
+      "character":"ÓóÒòŎŏÔôỐốỒồỖỗỔổǑǒÖöȪȫŐőÕõṌṍṎṏȬȭȮȯO͘o͘ȰȱØøǾǿǪǫǬǭŌōṒṐṑỎỏȌȍȎȏƠơỚớỜờỠỡỞởỢợỌọỘộO̩o̩Ò̩ò̩Ó̩ó̩ƟɵꝊꝋꝌꝍⱺ",
+      "letter_convertion": "o"
+    },
+    {
+      "character":"ṔṕṖṗⱣᵽƤƥᵱᶈ",
+      "letter_convertion": "p"
+    },
+    {
+      "character":"ʠɊɋq̃",
+      "letter_convertion": "q"
+    },
+    {
+      "character":"ŔŕɌɍŘřŖŗṘṙȐȑȒȓṚṛṜṝṞṟꞦꞧⱤɽR̃r̃ᵲ",
+      "letter_convertion": "r"
+    },
+    {
+      "character":"ŚśṠṡṨṩṤṥṢṣS̩s̩ꞨꞩŜŝṦṧŠšŞşȘșS̈s̈ᶊⱾȿᵴᶳ",
+      "letter_convertion": "s"
+    },
+   {
+      "character":"ŤťṪṫŢţṬṭȚțṰṱṮṯŦŧȾⱦƬƭƮʈT̈ẗᵵƫȶ",
+      "letter_convertion": "t"
+    },
+    {
+      "character":"ŬŭɄʉᵾᶶỤụÜüǛǜǗǘǙǚǕǖṲṳÚúÙùÛûṶṷǓǔȖȗŰűŬŭƯưỨứỪừỬửỰựỮỮỦủŪūŪ̀ū̀Ū́ū́ṺṻŪ̃ū̃ŨũṸṹṴṵᶙŲųŲ́ų́Ų̃ų̃ȔȕŮů",
+      "letter_convertion": "u"
+    },
+    {
+      "character":"ṼṽṾṿƲʋᶌ",
+      "letter_convertion": "v"
+    },
+    {
+      "character":"ẂẃẀẁŴŵẄẅẆẇẈẉẘ",
+      "letter_convertion": "w"
+    },
+    {
+      "character":"ẌẍẊẋX̂x̂ᶍ",
+      "letter_convertion": "x"
+    },
+    {
+      "character":"ÝýỲỳŶŷŸÿỸỹẎẏỴỵẙỶỷȲȳɎɏƳƴ",
+      "letter_convertion": "y"
+    },
+    {
+      "character":"ŹźẐẑŽžŻżẒẓẔẕƵƶᵶᶎⱫⱬ",
+      "letter_convertion": "z"
+    }
+]
