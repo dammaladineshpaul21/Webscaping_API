@@ -81,7 +81,7 @@ async def mixed_name(name, get_all_text):
     return get_correct_name
 
 
-def check_spacial_case(name, file_pass):
+async def check_spacial_case(name, file_pass):
     with open(file_pass) as file:
         get_data = json.load(file)
         create_df = pd.DataFrame(get_data, columns=["character", "letter_convertion"])
@@ -94,6 +94,7 @@ def check_spacial_case(name, file_pass):
                             i is not None]
             for i in range(len(get_final_Re)):
                 name = name.replace(name[name.index(get_val[i])], make_table["letter_convertion"][get_final_Re[i]])
+        await asyncio.sleep(0.25)
         return name
 
         # get_name_split = name.split(" ")
@@ -111,12 +112,18 @@ def check_spacial_case(name, file_pass):
         #                                                  make_table["letter_convertion"][get_key_phase[i]]))
         # return store_sp_chr
 
+
+def site_varification(get_text, error_massage):
+    get_result = [i for i in list(map(lambda x:x if re.compile(x).findall(get_text) else None, error_massage)) if i is not None]
+    return get_result
+
+
 # async def main():
-#     task0 = asyncio.create_task(get_all_urls("https://www.scandichotels.dk/hoteller/danmark/kobenhavn/scandic-kodbyen"))
+#     task0 = asyncio.create_task(get_all_urls("https://www.shoppingdoscosmeticos.com.br"))
 #     task1 = asyncio.create_task(get_all_text(task0))
-#     val = await task1
-#     print(val)
+#     val2 = site_varification(" ".join(await task1), ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",  "404 Error Pages", "errorCode 1020"])
+#     print(val2)
 #
 #
 # asyncio.run(main())
-#
+

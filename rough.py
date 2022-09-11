@@ -77,5 +77,5 @@
 # # else:
 # #     print("NO
 
-name = "KoṃaⱠ Munna".split()
-print(name)
+# error_massage = ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",
+#                  "404 Error Pages", "errorCode 1020"]
