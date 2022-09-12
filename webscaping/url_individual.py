@@ -7,12 +7,13 @@ import time
 import asyncio
 import aiohttp
 import json
+from urllib import parse
 
 
 async def get_all_urls(url):
     """GET all the link in the Website"""
     try:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
             async with session.get(url, ssl=False) as requs:
                 soup = BeautifulSoup(await requs.text(), 'html.parser')
         # soup = BeautifulSoup(requests.get(url).text, 'html.parser')
@@ -50,7 +51,7 @@ async def get_all_text(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
     soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in await get_all_urls]
-    pattern = re.compile(r"[A-Z0-9a-z'&a-z0-9]+|@|!|-|'|#|&|%")
+    pattern = re.compile(r"[A-Z'0-9a-z'&a-z'0-9]+|@|!|-|'|#|&|%")
     get_num = pattern.findall(str(soup).strip(), re.LOCALE)
     store_number_info.append(get_num)
     # comdine_text_value = set([j for i in store_number_info for j in i])
@@ -114,16 +115,17 @@ async def check_spacial_case(name, file_pass):
 
 
 def site_varification(get_text, error_massage):
-    get_result = [i for i in list(map(lambda x:x if re.compile(x).findall(get_text) else None, error_massage)) if i is not None]
+    get_result = [i for i in list(map(lambda x: x if re.compile(x).findall(get_text) else None, error_massage)) if
+                  i is not None]
     return get_result
 
 
 # async def main():
-#     task0 = asyncio.create_task(get_all_urls("https://www.shoppingdoscosmeticos.com.br"))
-#     task1 = asyncio.create_task(get_all_text(task0))
-#     val2 = site_varification(" ".join(await task1), ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",  "404 Error Pages", "errorCode 1020"])
-#     print(val2)
+#     task_1 = asyncio.create_task(get_all_urls("https://rackys.co.uk"))
+#     task_2 = asyncio.create_task(get_all_text(task_1))
+#     await task_1
+#     task1 = await task_2
+#     print(" ".join(task1))
 #
 #
-# asyncio.run(main())
-
+# asyncio.ru

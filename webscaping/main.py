@@ -19,20 +19,22 @@ class Varify_name(Resource):
             get_result, non_match, get_correct_name, get_incorrect_name, error_code = [], [], [], [], []
             call_mixed_name = asyncio.run(mixed_name(data["name"], url_object))
             error_massage = ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",
-                              "404 Error Pages", "errorCode 1020"]
-            if len(site_varification(" ".join(url_object), error_massage)) is not 0:
+                              "404 Error Pages", "errorCode 1020", "403 Forbidden"]
+            # if len(site_varification(" ".join(url_object), error_massage)) is not 0:
+            #     error_code.append(site_varification(" ".join(url_object), error_massage))
+            #     return jsonify(dict(Incorrect_val=get_result,
+            #                         top_name_incorrect=non_match,
+            #                         match=get_correct_name,
+            #                         no_match=get_incorrect_name,
+            #                         error_code=error_code))
+            if int(len(call_mixed_name)) > 0 or len(site_varification(" ".join(url_object), error_massage)) is not 0:
+                get_correct_name.append(call_mixed_name), \
                 error_code.append(site_varification(" ".join(url_object), error_massage))
                 return jsonify(dict(Incorrect_val=get_result,
                                     top_name_incorrect=non_match,
-                                    match=get_correct_name,
-                                    no_match=get_incorrect_name,
-                                    error_code=error_code))
-            if int(len(call_mixed_name)) > 0:
-                get_correct_name.append(call_mixed_name)
-                return jsonify(dict(Incorrect_val=get_result,
-                                    top_name_incorrect=non_match,
                                     match=get_correct_name[0],
-                                    no_match=get_incorrect_name))
+                                    no_match=get_incorrect_name,
+                                    error_code=error_code[0]))
             # Name verification word by word
             for i in str(data["name"][0]).split():
                 if re.compile(i).findall(str(url_object)):
@@ -69,12 +71,14 @@ class Varify_name(Resource):
                 return jsonify(dict(Incorrect_val=get_result,
                                     top_name_incorrect=non_match,
                                     match=get_correct_name,
-                                    no_match=get_incorrect_name))
+                                    no_match=get_incorrect_name,
+                                    error_code=error_code))
             else:
                 get_correct_name.append(data["name"][0])
-                return jsonify(dict(Incorrect_val=get_result,
-                                    top_name_incorrect=non_match,
-                                    match=get_correct_name,
-                                    no_match=get_incorrect_name))
+            return jsonify(dict(Incorrect_val=get_result,
+                                top_name_incorrect=non_match,
+                                match=get_correct_name,
+                                no_match=get_incorrect_name,
+                                error_code=error_code))
         except Exception as e:
             abort(500, Error_value=f"Unable to process URL request {e}")

@@ -79,3 +79,10 @@
 
 # error_massage = ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",
 #                  "404 Error Pages", "errorCode 1020"]
+
+import urllib.request
+import urllib.parse
+url = "http://www.musi-cal.com/cgi-bin/query"
+with urllib.request.urlopen(url) as f:
+    print(f.read().decode('utf-8'))
+
