@@ -28,6 +28,7 @@ class Varify_name(Resource):
             #                         match=get_correct_name,
             #                         no_match=get_incorrect_name,
             #                         error_code=error_code))
+            # to check the status of the Mixed Name
             if int(len(call_mixed_name)) > 0 or len(site_varification(" ".join(url_object), error_massage)) is not 0:
                 get_correct_name.append(call_mixed_name), \
                 error_code.append(site_varification(" ".join(url_object), error_massage))
