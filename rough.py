@@ -80,9 +80,12 @@
 # error_massage = ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",
 #                  "404 Error Pages", "errorCode 1020"]
 
-import urllib.request
-import urllib.parse
-url = "http://www.musi-cal.com/cgi-bin/query"
-with urllib.request.urlopen(url) as f:
-    print(f.read().decode('utf-8'))
+get_result = []
 
+
+def get_all_val(Incorrect_val, top_name_incorrect, match, no_match, error_code):
+    return dict(Incorrect_val=Incorrect_val, top_name_incorrect=top_name_incorrect,
+                match=match, no_match=no_match, error_code=error_code)
+
+
+print(get_all_val(get_result, "Munna", "Munna", "Munna", "Munna"))

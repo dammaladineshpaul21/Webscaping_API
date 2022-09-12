@@ -1,7 +1,7 @@
 import asyncio
 from flask import jsonify
 from flask_restful import Resource, reqparse, abort
-from webscaping.url_individual import get_all_text, get_all_urls, mixed_name, check_spacial_case, site_varification
+from webscaping.url_individual import get_all_text, get_all_urls, mixed_name, check_spacial_case, site_varification, get_all_val
 import re
 
 
@@ -32,11 +32,7 @@ class Varify_name(Resource):
             if int(len(call_mixed_name)) > 0 or len(site_varification(" ".join(url_object), error_massage)) is not 0:
                 get_correct_name.append(call_mixed_name), \
                 error_code.append(site_varification(" ".join(url_object), error_massage))
-                return jsonify(dict(Incorrect_val=get_result,
-                                    top_name_incorrect=non_match,
-                                    match=get_correct_name[0],
-                                    no_match=get_incorrect_name,
-                                    error_code=error_code[0]))
+                return jsonify(get_all_val(get_result, non_match, get_correct_name[0], get_incorrect_name, error_code[0]))
             # Name verification word by word
             for i in str(data["name"][0]).split():
                 if re.compile(i).findall(str(url_object)):
@@ -70,17 +66,21 @@ class Varify_name(Resource):
                             get_correct_name.append(data["name"][i])
                         else:
                             get_incorrect_name.append(data["name"][i])
-                return jsonify(dict(Incorrect_val=get_result,
-                                    top_name_incorrect=non_match,
-                                    match=get_correct_name,
-                                    no_match=get_incorrect_name,
-                                    error_code=error_code))
+                return jsonify(get_all_val(get_result, non_match, get_correct_name, get_incorrect_name, error_code))
+
+                # return jsonify(dict(Incorrect_val=get_result,
+                #                     top_name_incorrect=non_match,
+                #                     match=get_correct_name,
+                #                     no_match=get_incorrect_name,
+                #                     error_code=error_code))
             else:
                 get_correct_name.append(data["name"][0])
-            return jsonify(dict(Incorrect_val=get_result,   # Final Output
-                                top_name_incorrect=non_match,
-                                match=get_correct_name,
-                                no_match=get_incorrect_name,
-                                error_code=error_code))
+            return jsonify(get_all_val(get_result, non_match, get_correct_name, get_incorrect_name, error_code))
+
+            # return jsonify(dict(Incorrect_val=get_result,   # Final Output
+            #                     top_name_incorrect=non_match,
+            #                     match=get_correct_name,
+            #                     no_match=get_incorrect_name,
+            #                     error_code=error_code))
         except Exception as e:
             abort(500, Error_value=f"Unable to process URL request {e}")

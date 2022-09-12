@@ -3,11 +3,9 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 import itertools
-import time
 import asyncio
 import aiohttp
 import json
-from urllib import parse
 
 
 async def get_all_urls(url):
@@ -57,7 +55,7 @@ async def get_all_text(get_all_urls):
     # comdine_text_value = set([j for i in store_number_info for j in i])
     comdine_text_value = [j for i in store_number_info for j in i]
     # comdine_text_value.union(self.extract_the_copyrights())
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(0.10)
     return comdine_text_value
 
 
@@ -78,7 +76,7 @@ async def mixed_name(name, get_all_text):
             get_correct_name.append(name[i])
         else:
             pass
-    await asyncio.sleep(0.50)
+    await asyncio.sleep(0.10)
     return get_correct_name
 
 
@@ -95,7 +93,7 @@ async def check_spacial_case(name, file_pass):
                             i is not None]
             for i in range(len(get_final_Re)):
                 name = name.replace(name[name.index(get_val[i])], make_table["letter_convertion"][get_final_Re[i]])
-        await asyncio.sleep(0.25)
+        await asyncio.sleep(0.10)
         return name
 
         # get_name_split = name.split(" ")
@@ -120,12 +118,16 @@ def site_varification(get_text, error_massage):
     return get_result
 
 
+def get_all_val(incorrect_val, top_name_incorrect, match, no_match, error_code):
+    return dict(Incorrect_val=incorrect_val, top_name_incorrect=top_name_incorrect,
+                match=match, no_match=no_match, error_code=error_code)
+
 # async def main():
-#     task_1 = asyncio.create_task(get_all_urls("https://rackys.co.uk"))
+#     task_1 = asyncio.create_task(get_all_urls("http://www.completesecurityinc.com"))
 #     task_2 = asyncio.create_task(get_all_text(task_1))
-#     await task_1
-#     task1 = await task_2
-#     print(" ".join(task1))
+#     val2 = await task_1
+#     val = await task_2
+#     print(val, val2)
 #
 #
-# asyncio.ru
+# asyncio.run(main())
