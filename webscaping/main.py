@@ -18,6 +18,7 @@ class Varify_name(Resource):
             url_object = asyncio.run(get_all_text(get_all_urls(data.get("url"))))
             get_result, non_match, get_correct_name, get_incorrect_name, error_code = [], [], [], [], []
             call_mixed_name = asyncio.run(mixed_name(data["name"], url_object))
+            # Attribute of Error in URL Website
             error_massage = ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",
                               "404 Error Pages", "errorCode 1020", "403 Forbidden"]
             # if len(site_varification(" ".join(url_object), error_massage)) is not 0:
