@@ -75,7 +75,7 @@ class Varify_name(Resource):
                                     error_code=error_code))
             else:
                 get_correct_name.append(data["name"][0])
-            return jsonify(dict(Incorrect_val=get_result,
+            return jsonify(dict(Incorrect_val=get_result,   # Final Output
                                 top_name_incorrect=non_match,
                                 match=get_correct_name,
                                 no_match=get_incorrect_name,
