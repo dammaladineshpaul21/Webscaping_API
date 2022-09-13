@@ -6,14 +6,18 @@ import itertools
 import asyncio
 import aiohttp
 import json
+import urllib3
+
+urllib3.disable_warnings()
 
 
 async def get_all_urls(url):
     """GET all the link in the Website"""
     try:
-        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
-            async with session.get(url, ssl=False) as requs:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=7)) as session:
+            async with session.get(url, ssl=True) as requs:
                 soup = BeautifulSoup(await requs.text(), 'html.parser')
+            await session.close()
         # soup = BeautifulSoup(requests.get(url).text, 'html.parser')
         urls = [link.get('href') for link in soup.find_all('a')]
         urls_contact = [i for i in set([get_specific_url for get_specific_url in set(urls) \
@@ -25,10 +29,6 @@ async def get_all_urls(url):
         if len([i for i in urls_contact if re.compile("^[a-z]|/").findall((str(i)))]) >= 1:
             get_d = [None if re.compile(f"http").findall(str(i)) or re.compile(f"/").findall(str(i)) else "/" + i
                      for i in urls_contact]
-            # if re.compile(f"http").findall(str(i)):
-            #     pass
-            # else:
-            #     get_d.append(i)
             urls_contact2 = [str(url) + "/" + str(i[1::]) for i in itertools.chain(urls_contact, get_d) \
                              if str(i).startswith("/")]
             get_filter_urls = [i for i in list(map(lambda i: i if str(i).startswith("http") else None,
@@ -48,9 +48,10 @@ async def get_all_urls(url):
 async def get_all_text(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
-    soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in await get_all_urls]
-    pattern = re.compile(r"[A-Z'0-9a-z'&a-z'0-9]+|@|!|-|'|#|&|%")
-    get_num = pattern.findall(str(soup).strip(), re.LOCALE)
+    soup = [BeautifulSoup(requests.get(txt, verify=False).text, 'html.parser') for txt in await get_all_urls]
+    # pattern = re.compile(r"[A-Za-z'a-z0-9a-z'&a-z'0-9]+|@|!|-|'|#|&|%")
+    pattern = re.compile(r"[A-Za-z\w'a-z-&A-Za-z'a-z]+")
+    get_num = pattern.findall(str(soup).strip())
     store_number_info.append(get_num)
     # comdine_text_value = set([j for i in store_number_info for j in i])
     comdine_text_value = [j for i in store_number_info for j in i]
@@ -76,7 +77,7 @@ async def mixed_name(name, get_all_text):
             get_correct_name.append(name[i])
         else:
             pass
-    await asyncio.sleep(0.10)
+    await asyncio.sleep(0.25)
     return get_correct_name
 
 
@@ -86,15 +87,20 @@ async def check_spacial_case(name, file_pass):
         create_df = pd.DataFrame(get_data, columns=["character", "letter_convertion"])
         make_table = create_df.set_index("character").to_dict()
         get_sp_char = [i for i, k in make_table["letter_convertion"].items()]
-        for val in name.split():
-            get_val = [i for i in [None if re.compile(r"[A-Za-z]").findall(i) else i for i in val] if i is not None]
-            get_final_Re = [i for i in list(itertools.chain(*[list(map(lambda x: x if get_val[i] in x else None, \
-                                                                       get_sp_char)) for i in range(len(get_val))])) if
-                            i is not None]
-            for i in range(len(get_final_Re)):
-                name = name.replace(name[name.index(get_val[i])], make_table["letter_convertion"][get_final_Re[i]])
-        await asyncio.sleep(0.10)
-        return name
+        if "&" not in name:
+            for val in name.split():
+                get_val = [i for i in [None if re.compile(r"[A-Za-z]").findall(i) else i for i in val] if i is not None]
+                get_final_Re = [i for i in list(itertools.chain(*[list(map(lambda x: x if get_val[i] in x else None, \
+                                                                           get_sp_char)) for i in range(len(get_val))]))
+                                if i is not None]
+                for i in range(len(get_final_Re)):
+                    name = name.replace(name[name.index(get_val[i])], make_table["letter_convertion"][get_final_Re[i]])
+            await asyncio.sleep(0.25)
+            return name
+        else:
+            name = name.replace(name[name.index("&")], make_table["letter_convertion"]["&"])
+            await asyncio.sleep(0.10)
+            return name
 
         # get_name_split = name.split(" ")
         # for k in range(len(get_name_split)):
@@ -122,12 +128,24 @@ def get_all_val(incorrect_val, top_name_incorrect, match, no_match, error_code):
     return dict(Incorrect_val=incorrect_val, top_name_incorrect=top_name_incorrect,
                 match=match, no_match=no_match, error_code=error_code)
 
-# async def main():
-#     task_1 = asyncio.create_task(get_all_urls("http://www.completesecurityinc.com"))
+
+def error_check(get_all_urls):
+    """Will Execute all the text retived from the ULR"""
+    store_number_info = []
+    soup = BeautifulSoup(requests.get(get_all_urls, verify=False).text, 'html.parser')
+    # pattern = re.compile(r"[A-Za-z'a-z0-9a-z'&a-z'0-9]+|@|!|-|'|#|&|%")
+    pattern = re.compile(r"[A-Za-z\w'a-z-&A-Za-z'a-z]+")
+    get_num = pattern.findall(str(soup).strip())
+    store_number_info.append(get_num)
+    # comdine_text_value = set([j for i in store_number_info for j in i])
+    comdine_text_value = [j for i in store_number_info for j in i]
+    # comdine_text_value.union(self.extract_the_copyrights())
+    return comdine_text_value
+
+
+# async def main(url):
+#     task_1 = asyncio.create_task(get_all_urls(url))
 #     task_2 = asyncio.create_task(get_all_text(task_1))
-#     val2 = await task_1
+#     await task_1
 #     val = await task_2
-#     print(val, val2)
-#
-#
-# asyncio.run(main())
+#     return val

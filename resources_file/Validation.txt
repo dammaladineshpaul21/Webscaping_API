@@ -1,3 +1,16 @@
 1. Need to check with the nuber if string contains
 # https://stackoverflow.com/questions/58013968/how-to-fix-beautifulsoup-breaking-asynchronous-execution-of-asyncio-and-aiohttp
 2. https://manchesterartgallery.org | Website is working but 403 Error
+
+
+
+__________________________________________________
+http://www.clelandrealty.com/contact | Need to check with selenum
+
+https://www.comune.sanpietrodifeletto.tv.it | Need to check with selenum
+
+
+https://apollo.geo.apple.com/rap/qc/00027b28-7742-47f3-96a7-f713ab622e3d | Mrs Mac’s |
+" ' "
+
+https://apollo.geo.apple.com/rap/qc/b8313408-7ec9-4034-ac5e-c4f6f472fb7f | Glacier Dessert Bar - Tulsa |

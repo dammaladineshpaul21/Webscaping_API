@@ -102,5 +102,9 @@
     {
       "character":"ŹźẐẑŽžŻżẒẓẔẕƵƶᵶᶎⱫⱬ",
       "letter_convertion": "z"
+    },
+    {
+      "character":"&",
+      "letter_convertion": "&amp"
     }
 ]
