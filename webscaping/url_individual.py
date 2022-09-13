@@ -14,11 +14,10 @@ urllib3.disable_warnings()
 async def get_all_urls(url):
     """GET all the link in the Website"""
     try:
-        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=7)) as session:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
             async with session.get(url, ssl=True) as requs:
                 soup = BeautifulSoup(await requs.text(), 'html.parser')
             await session.close()
-        # soup = BeautifulSoup(requests.get(url).text, 'html.parser')
         urls = [link.get('href') for link in soup.find_all('a')]
         urls_contact = [i for i in set([get_specific_url for get_specific_url in set(urls) \
                                         if "location" in str(get_specific_url) or "contact" in str(get_specific_url) \
@@ -49,25 +48,12 @@ async def get_all_text(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
     soup = [BeautifulSoup(requests.get(txt, verify=False).text, 'html.parser') for txt in await get_all_urls]
-    # pattern = re.compile(r"[A-Za-z'a-z0-9a-z'&a-z'0-9]+|@|!|-|'|#|&|%")
     pattern = re.compile(r"[A-Za-z\w'a-z-&A-Za-z'a-z]+")
     get_num = pattern.findall(str(soup).strip())
     store_number_info.append(get_num)
-    # comdine_text_value = set([j for i in store_number_info for j in i])
     comdine_text_value = [j for i in store_number_info for j in i]
-    # comdine_text_value.union(self.extract_the_copyrights())
     await asyncio.sleep(0.10)
     return comdine_text_value
-
-
-def get_patter_verificaiton(user_name):
-    name = user_name.split()
-    if re.compile("@|!|#|-|&|%").findall(" ".join(name)):
-        name1 = [" ".join(j) for j in [name[0:i + 1] for i in range(len(name))][0:len(name)][0:len(name) - 1]]
-        get_filter_name = [[i for i in name1 if re.compile("@|!|-|#|&|%").findall(i)][0]]
-        return get_filter_name
-    else:
-        pass
 
 
 async def mixed_name(name, get_all_text):
@@ -97,25 +83,13 @@ async def check_spacial_case(name, file_pass):
                     name = name.replace(name[name.index(get_val[i])], make_table["letter_convertion"][get_final_Re[i]])
             await asyncio.sleep(0.25)
             return name
+        elif "’" in name:
+            name = name.replace(name[name.index("’")], make_table["letter_convertion"]["’"])
+            return name
         else:
             name = name.replace(name[name.index("&")], make_table["letter_convertion"]["&"])
             await asyncio.sleep(0.10)
             return name
-
-        # get_name_split = name.split(" ")
-        # for k in range(len(get_name_split)):
-        #     # get_val = [None if re.compile(r"[A-Za-z]").findall(i) else i for i in name[k]]
-        #     get_val = " ".join([i for i in list(map(lambda x: None if re.compile(r"[A-Za-z]").findall(x) else x,
-        #                                             get_name_split[k].strip())) if i is not None]).strip()
-        #
-        #     store_sp_chr.append(get_val)
-        # get_key_phase = list(itertools.chain(
-        #     *[[i for i in map(lambda x: x if store_sp_chr[i] in x else None, get_sp_char) if i is not None] \
-        #       for i in range(len(store_sp_chr))]))
-        # for i in range(len(get_name_split)):
-        #     filted_name.append(get_name_split[i].replace(get_name_split[i][get_name_split[i].index(store_sp_chr[i])],\
-        #                                                  make_table["letter_convertion"][get_key_phase[i]]))
-        # return store_sp_chr
 
 
 def site_varification(get_text, error_massage):
@@ -129,23 +103,35 @@ def get_all_val(incorrect_val, top_name_incorrect, match, no_match, error_code):
                 match=match, no_match=no_match, error_code=error_code)
 
 
-def error_check(get_all_urls):
+async def error_check(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
     soup = BeautifulSoup(requests.get(get_all_urls, verify=False).text, 'html.parser')
-    # pattern = re.compile(r"[A-Za-z'a-z0-9a-z'&a-z'0-9]+|@|!|-|'|#|&|%")
     pattern = re.compile(r"[A-Za-z\w'a-z-&A-Za-z'a-z]+")
     get_num = pattern.findall(str(soup).strip())
     store_number_info.append(get_num)
-    # comdine_text_value = set([j for i in store_number_info for j in i])
     comdine_text_value = [j for i in store_number_info for j in i]
-    # comdine_text_value.union(self.extract_the_copyrights())
+    await asyncio.sleep(0.10)
     return comdine_text_value
 
 
+def extract_the_copyrights(url):
+    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+    get_name = []
+    for tag in soup.findAll(text=re.compile(r'©|copy;')):
+        copyrighttexts = tag.parent.text
+        get_name.append(copyrighttexts)
+    get_name.append(soup.title.string)
+    return [get_name[0].strip()]
+
+
 # async def main(url):
-#     task_1 = asyncio.create_task(get_all_urls(url))
-#     task_2 = asyncio.create_task(get_all_text(task_1))
-#     await task_1
-#     val = await task_2
-#     return val
+#     # try:
+#     #     l = await asyncio.wait_for(asyncio.gather(error_check(url)), timeout=4.0)
+#     #     print(l)
+#     # except asyncio.TimeoutError:
+#     #     print("Time Out Error")
+#     l = await asyncio.gather(asyncio.to_thread(asyncio.run(error_check(url))))
+#     print(l)
+#
+# asyncio.run(main("http://vuedemer.fr"))

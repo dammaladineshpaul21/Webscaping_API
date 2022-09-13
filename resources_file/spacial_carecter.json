@@ -106,5 +106,9 @@
     {
       "character":"&",
       "letter_convertion": "&amp"
+    },
+    {
+      "character":"’",
+      "letter_convertion": "'"
     }
 ]

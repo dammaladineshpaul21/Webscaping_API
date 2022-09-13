@@ -15,23 +15,19 @@ class Varify_name(Resource):
             # Getting access to the variable
             data = parser.parse_args()
             url_object = asyncio.run(get_all_text(get_all_urls(data.get("url"))))
-            url_object2 = error_check(data.get("url"))
+            url_object2 = asyncio.run(error_check(data.get("url")))
             get_result, non_match, get_correct_name, get_incorrect_name, error_code = [], [], [], [], []
             call_mixed_name = asyncio.run(mixed_name(data["name"], url_object))
             # Attribute of Error in URL Website
             error_massage = ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",
-                             "404 Error Pages", "errorCode 1020", "403 Forbidden", "Error Page cannot be displayed"]
-            # if len(site_varification(" ".join(url_object), error_massage)) is not 0:
-            #     error_code.append(site_varification(" ".join(url_object), error_massage))
-            #     return jsonify(dict(Incorrect_val=get_result,
-            #                         top_name_incorrect=non_match,
-            #                         match=get_correct_name,
-            #                         no_match=get_incorrect_name,
-            #                         error_code=error_code))
+                             "Domain for Sale", "Mod_Security"
+                                                "404 Error Pages", "errorCode 1020", "403 Forbidden",
+                             "Error Page cannot be displayed", "Domain Not Claimed", "This domain is for sale"]
             # to check the status of the Mixed Name
             if len(site_varification(" ".join(url_object2), error_massage)) is not 0:
                 error_code.append(site_varification(" ".join(url_object), error_massage))
-                return jsonify(get_all_val(get_result, non_match, get_correct_name, get_incorrect_name, error_code[0]))
+                return jsonify(get_all_val(get_result, non_match, get_correct_name, get_incorrect_name,
+                                           error_code[0] + extract_the_copyrights(data.get("url"))))
             if int(len(call_mixed_name)) > 0:
                 get_correct_name.append(call_mixed_name)
                 return jsonify(get_all_val(get_result, non_match, get_correct_name[0],
@@ -46,12 +42,11 @@ class Varify_name(Resource):
                         pass
                     else:
                         get_result.append(i)
-                    # Name checking all name in the list Correct and Incorrect
-                    # Checks the Already Existing correct name
+            # Name checking all name in the list Correct and Incorrect
+            # Checks the Already Existing correct name
             if int(len(get_result)) == 0:
                 for i in range(len(data["name"])):
-                    if re.compile(data["name"][i]).findall(" ".join(url_object)) and \
-                            len(get_result) | len(non_match) == 0:
+                    if re.compile(data["name"][i]).findall(" ".join(url_object)):
                         get_correct_name.append(data["name"][i])
                     else:
                         get_incorrect_name.append(data["name"][i])
