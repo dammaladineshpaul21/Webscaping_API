@@ -48,8 +48,7 @@ async def get_all_text(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
     soup = [BeautifulSoup(requests.get(txt, verify=False).text, 'html.parser') for txt in await get_all_urls]
-    pattern = re.compile(r"[A-Za-z\w'a-z-&A-Za-z'a-z]+")
-    get_num = pattern.findall(str(soup).strip())
+    get_num = re.findall(r"[A-Za-z\w'a-z-&A-Za-z']+", str(soup).strip())
     store_number_info.append(get_num)
     comdine_text_value = [j for i in store_number_info for j in i]
     await asyncio.sleep(0.10)
@@ -57,14 +56,17 @@ async def get_all_text(get_all_urls):
 
 
 async def mixed_name(name, get_all_text):
-    get_correct_name = []
-    for i in range(len(name)):
-        if re.compile(str(name[i]).replace(" ", "").lower()).findall(" ".join(get_all_text)):
-            get_correct_name.append(name[i])
-        else:
-            pass
-    await asyncio.sleep(0.25)
-    return get_correct_name
+    try:
+        get_correct_name = []
+        for i in range(len(name)):
+            if re.compile(str(name[i]).replace(" ", "").lower()).findall(" ".join(get_all_text)):
+                get_correct_name.append(name[i])
+            else:
+                pass
+        await asyncio.sleep(0.25)
+        return get_correct_name
+    except Exception:
+        return dict(error_massage=ValueError)
 
 
 async def check_spacial_case(name, file_pass):
@@ -105,14 +107,19 @@ def get_all_val(incorrect_val, top_name_incorrect, match, no_match, error_code):
 
 async def error_check(get_all_urls):
     """Will Execute all the text retived from the ULR"""
-    store_number_info = []
-    soup = BeautifulSoup(requests.get(get_all_urls, verify=False).text, 'html.parser')
-    pattern = re.compile(r"[A-Za-z\w'a-z-&A-Za-z'a-z]+")
-    get_num = pattern.findall(str(soup).strip())
-    store_number_info.append(get_num)
-    comdine_text_value = [j for i in store_number_info for j in i]
-    await asyncio.sleep(0.10)
-    return comdine_text_value
+    try:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
+            async with session.get(get_all_urls, ssl=True) as requs:
+                soup = BeautifulSoup(await requs.text(), 'html.parser')
+            await session.close()
+        store_number_info = []
+        get_num = re.findall(r"[A-Za-z\w'a-z-&A-Za-z'a-z]+", str(soup).strip())
+        store_number_info.append(get_num)
+        comdine_text_value = [j for i in store_number_info for j in i]
+        await asyncio.sleep(0.10)
+        return comdine_text_value
+    except Exception:
+        return {"Error_massage": "ConnectionRefusedError"}
 
 
 def extract_the_copyrights(url):
@@ -125,13 +132,3 @@ def extract_the_copyrights(url):
     return [get_name[0].strip()]
 
 
-# async def main(url):
-#     # try:
-#     #     l = await asyncio.wait_for(asyncio.gather(error_check(url)), timeout=4.0)
-#     #     print(l)
-#     # except asyncio.TimeoutError:
-#     #     print("Time Out Error")
-#     l = await asyncio.gather(asyncio.to_thread(asyncio.run(error_check(url))))
-#     print(l)
-#
-# asyncio.run(main("http://vuedemer.fr"))
