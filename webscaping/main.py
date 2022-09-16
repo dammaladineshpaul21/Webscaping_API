@@ -5,6 +5,7 @@ import re
 
 
 class Varify_name(Resource):
+
     def post(self):
         try:
             """Payload Section to get the Attributes"""
@@ -33,29 +34,56 @@ class Varify_name(Resource):
                                            get_incorrect_name, error_code))
             # # Name verification word by word
             for i in str(data["name"][0]).split():
-                if re.findall(i, str(url_object)):pass
+                if re.findall(i, str(url_object)):
+                    pass
                 else:
-                    if re.findall(asyncio.run(check_spacial_case(i, "resources_file/spacial_carecter.json")), str(url_object2)):
+                    if re.findall(asyncio.run(check_spacial_case(i, "resources_file/spacial_carecter.json")),
+                                  str(url_object2)):
                         pass
-                    else: get_result.append(i)
+                    else:
+                        get_result.append(i)
             # # Name checking all name in the list Correct and Incorrect
             # # Checks the Already Existing correct name
             if int(len(get_result)) == 0:
                 for i in range(len(data["name"])):
-                    if re.findall(data["name"][i], " ".join(url_object)): get_correct_name.append(data["name"][i])
-                    else: get_incorrect_name.append(data["name"][i])
+                    if re.findall(data["name"][i], " ".join(url_object)):
+                        get_correct_name.append(data["name"][i])
+                    else:
+                        get_incorrect_name.append(data["name"][i])
             else:
                 for i in range(len(data["name"])):
-                    if re.compile(data["name"][i]).findall(" ".join(url_object)): get_correct_name.append(data["name"][i])
-                    else: get_incorrect_name.append(data["name"][i])
+                    if re.compile(data["name"][i]).findall(" ".join(url_object)):
+                        get_correct_name.append(data["name"][i])
+
+                    else:
+                        get_incorrect_name.append(data["name"][i])
             if len(get_result) > 0:
                 # Name verification by String
-                if re.compile(data["name"][0]).findall(" ".join(url_object)): pass
+                if re.compile(data["name"][0]).findall(" ".join(url_object)):
+                    pass
                 else:
                     if re.compile(asyncio.run(check_spacial_case(data["name"][0],
-                                                                 "resources_file/spacial_carecter.json"))).findall(str(" ".join(url_object2))):
+                                                                 "resources_file/spacial_carecter.json"))).findall(
+                        str(" ".join(url_object2))):
                         pass
-                    else: non_match.append(data["name"][0])
+                    else:
+                        non_match.append(data["name"][0])
             return jsonify(get_all_val(get_result, non_match, get_correct_name, get_incorrect_name, error_code))
         except Exception as e:
             abort(500, Error_value=f"Unable to process URL request or [Instead Broken URL] and {e}")
+
+
+class Varify_phone_number(Resource):
+
+    def post(self):
+        try:
+            """Payload Section to get the Attributes"""
+            parser = reqparse.RequestParser()
+            parser.add_argument("url", type=str, required=True, help="This should be a name")
+            parser.add_argument("name", action="append", type=int, required=True, help="This should be a name")
+            data = parser.parse_args()
+            url_object = asyncio.run(get_all_urls(data.get("url")))
+            # all_string_phone_number = list(map(phone_number_string, url_object[0]))
+            return jsonify(url_object=url_object)
+        except Exception as e:
+            abort(500, Error_value=f"Unable to process [URL, Phone_number] request or {e}")
