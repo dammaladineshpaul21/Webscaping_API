@@ -1,6 +1,10 @@
+import asyncio
+import json
+
 from flask import jsonify
 from flask_restful import Resource, reqparse, abort
 from webscaping.url_individual import *
+from phonenumber.main_phonenumber_file import get_number_list, phone_number_string, get_ow_number
 import re
 
 
@@ -10,7 +14,7 @@ class Varify_name(Resource):
         try:
             """Payload Section to get the Attributes"""
             parser = reqparse.RequestParser()
-            parser.add_argument("url", type=str, required=True, help="This should be a name")
+            parser.add_argument("url", type=str, required=True, help="This should be a Url")
             parser.add_argument("name", action="append", type=str, required=True, help="This should be a name")
             # Getting access to the variable
             data = parser.parse_args()
@@ -64,7 +68,7 @@ class Varify_name(Resource):
                 else:
                     if re.compile(asyncio.run(check_spacial_case(data["name"][0],
                                                                  "resources_file/spacial_carecter.json"))).findall(
-                        str(" ".join(url_object2))):
+    str(" ".join(url_object2))):
                         pass
                     else:
                         non_match.append(data["name"][0])
@@ -79,11 +83,24 @@ class Varify_phone_number(Resource):
         try:
             """Payload Section to get the Attributes"""
             parser = reqparse.RequestParser()
-            parser.add_argument("url", type=str, required=True, help="This should be a name")
-            parser.add_argument("name", action="append", type=int, required=True, help="This should be a name")
+            parser.add_argument("url", type=str, required=True, help="This should be a Url")
+            parser.add_argument("Phone_number", action="append", type=str, required=True,
+                                help="This should be a Phone_number")
             data = parser.parse_args()
-            url_object = asyncio.run(get_all_urls(data.get("url")))
-            # all_string_phone_number = list(map(phone_number_string, url_object[0]))
-            return jsonify(url_object=url_object)
+            # urlobject = asyncio.run(get_all_urls(data.get("url")))
+            urlobject2 = asyncio.run(phone_number_string(data.get("url")))
+            phonenumber_list, incorrect_number, correct_number, website_number = [], [], [], []
+            for i in range(len(data["Phone_number"])):
+                phonenumber_list.append(asyncio.run(get_number_list(data["Phone_number"][i])))
+            for i in range(len(phonenumber_list)):
+                if re.findall(phonenumber_list[i], " ".join(urlobject2).replace(" ", "")):
+                    correct_number.append(data["Phone_number"][i])
+                else:
+                    incorrect_number.append(data["Phone_number"][i])
+            if len(correct_number) == 0:
+                website_number.append(asyncio.run(get_ow_number(data.get("url"))))
+            return jsonify(dict(correct_number=correct_number,
+                                incorrect_number=incorrect_number,
+                                website_number=[ele for sublist in website_number for ele in sublist]))
         except Exception as e:
             abort(500, Error_value=f"Unable to process [URL, Phone_number] request or {e}")

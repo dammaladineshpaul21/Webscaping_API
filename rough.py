@@ -92,3 +92,7 @@ import time
 # end_time = timeit.timeit()
 # # Without Lambda function
 # print(reduce(addition, input_list), end_time-st_time)
+
+number = ["8974567","8974567", "8974567"]
+print(*(number))
+

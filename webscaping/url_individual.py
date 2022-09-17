@@ -49,7 +49,7 @@ async def get_all_text(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
     soup = [BeautifulSoup(requests.get(txt, verify=False).text, 'html.parser') for txt in await get_all_urls]
-    get_num = re.findall(r"[A-Za-z\w'a-z-&A-Za-z']+", str(soup).strip())
+    get_num = re.findall(r"[A-Za-z\w'a-z-&A-Za-z'0-9]+", str(soup).strip())
     store_number_info.append(get_num)
     comdine_text_value = [j for i in store_number_info for j in i]
     await asyncio.sleep(0.10)
@@ -79,12 +79,15 @@ async def check_spacial_case(name, file_pass):
             get_sp_char = [i for i, k in make_table["letter_convertion"].items()]
             if "&" not in name:
                 for val in name.split():
-                    get_val = [i for i in [None if re.compile(r"[A-Za-z]").findall(i) else i for i in val] if i is not None]
+                    get_val = [i for i in [None if re.compile(r"[A-Za-z]").findall(i) else i for i in val] if
+                               i is not None]
                     get_final_Re = [i for i in list(itertools.chain(*[list(map(lambda x: x if get_val[i] in x else None, \
-                                                                               get_sp_char)) for i in range(len(get_val))]))
+                                                                               get_sp_char)) for i in
+                                                                      range(len(get_val))]))
                                     if i is not None]
                     for i in range(len(get_final_Re)):
-                        name = name.replace(name[name.index(get_val[i])], make_table["letter_convertion"][get_final_Re[i]])
+                        name = name.replace(name[name.index(get_val[i])],
+                                            make_table["letter_convertion"][get_final_Re[i]])
                 await asyncio.sleep(0.25)
                 return name
             elif "’" in name:
@@ -140,4 +143,5 @@ def extract_the_copyrights(url):
         get_name.append(copyrighttexts)
     get_name.append(soup.title.string)
     return [get_name[0].strip()]
+
 
