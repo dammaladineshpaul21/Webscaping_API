@@ -5,13 +5,14 @@ from webscaping.main import Varify_name, Varify_phone_number
 
 
 async def main():
-    app = Flask(__name__)
+    app = Flask("Webscaping_API")
+    app.config['BUNDLE_ERRORS'] = False
     api_bp = Blueprint('webscaping', __name__)
     api = Api(api_bp)
 
     app.register_blueprint(api_bp)
-    api.add_resource(Varify_name, "/poi-attribute/name")
-    api.add_resource(Varify_phone_number, "/poi-attribute/phonenumbr")
+    api.add_resource(Varify_name, "/poi-attribute/name", methods=['POST'])
+    api.add_resource(Varify_phone_number, "/poi-attribute/phonenumbr", methods=['POST'])
     await asyncio.sleep(0.5)
     return app
 

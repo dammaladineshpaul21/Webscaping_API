@@ -1,5 +1,4 @@
 import asyncio
-import json
 
 from flask import jsonify
 from flask_restful import Resource, reqparse, abort
@@ -10,7 +9,8 @@ import re
 
 class Varify_name(Resource):
 
-    def post(self):
+    @staticmethod
+    def post():
         try:
             """Payload Section to get the Attributes"""
             parser = reqparse.RequestParser()
@@ -67,8 +67,7 @@ class Varify_name(Resource):
                     pass
                 else:
                     if re.compile(asyncio.run(check_spacial_case(data["name"][0],
-                                                                 "resources_file/spacial_carecter.json"))).findall(
-    str(" ".join(url_object2))):
+                    "resources_file/spacial_carecter.json"))).findall(str(" ".join(url_object2))):
                         pass
                     else:
                         non_match.append(data["name"][0])
@@ -79,7 +78,8 @@ class Varify_name(Resource):
 
 class Varify_phone_number(Resource):
 
-    def post(self):
+    @staticmethod
+    def post():
         try:
             """Payload Section to get the Attributes"""
             parser = reqparse.RequestParser()
@@ -89,18 +89,22 @@ class Varify_phone_number(Resource):
             data = parser.parse_args()
             # urlobject = asyncio.run(get_all_urls(data.get("url")))
             urlobject2 = asyncio.run(phone_number_string(data.get("url")))
-            phonenumber_list, incorrect_number, correct_number, website_number = [], [], [], []
+            phonenumber_list, incorrect_number, correct_number, website_number, result = [], [], [], [], []
+            all_website_number = asyncio.run(get_ow_number(data.get("url")))
+            for i in set(all_website_number):
+                if i not in website_number:
+                    website_number.append(asyncio.run(get_number_list(i)))
             for i in range(len(data["Phone_number"])):
-                phonenumber_list.append(asyncio.run(get_number_list(data["Phone_number"][i])))
+                if not str(data["Phone_number"][i]).isidentifier():
+                    phonenumber_list.append(asyncio.run(get_number_list(data["Phone_number"][i])))
             for i in range(len(phonenumber_list)):
-                if re.findall(phonenumber_list[i], " ".join(urlobject2).replace(" ", "")):
-                    correct_number.append(data["Phone_number"][i])
+                if re.findall(asyncio.run(get_number_list(phonenumber_list[i])), " ".join(urlobject2).replace(" ", "")) \
+                        and len(phonenumber_list[i]) >= 10:
+                    correct_number.append(phonenumber_list[i])
                 else:
-                    incorrect_number.append(data["Phone_number"][i])
-            if len(correct_number) == 0:
-                website_number.append(asyncio.run(get_ow_number(data.get("url"))))
+                    incorrect_number.append(phonenumber_list[i])
             return jsonify(dict(correct_number=correct_number,
                                 incorrect_number=incorrect_number,
-                                website_number=[ele for sublist in website_number for ele in sublist]))
+                                website_number=list(set(website_number).difference(set(correct_number)))))
         except Exception as e:
-            abort(500, Error_value=f"Unable to process [URL, Phone_number] request or {e}")
+            abort(500, Error_value=f"Unable to process [url and phone_number] request or {e}")

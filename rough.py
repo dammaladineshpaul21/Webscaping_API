@@ -93,6 +93,13 @@ import time
 # # Without Lambda function
 # print(reduce(addition, input_list), end_time-st_time)
 
-number = ["8974567","8974567", "8974567"]
-print(*(number))
+# number = ["8974567","8974567", "8974567"]
+# print(*(number))
 
+
+# [i for i in website_number if i not in website_number]
+# from flask_restful import fields, marshal
+# import json
+# resource_fields = {'name': fields.String, 'first_names': fields.List(fields.String)}
+# data = {'name': 'Bougnazal', 'first_names' : []}
+# print(json.dumps(marshal(data, resource_fields)))
