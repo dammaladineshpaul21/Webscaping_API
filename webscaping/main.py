@@ -111,8 +111,8 @@ class Varify_phone_number(Resource):
                     correct_number.append(phonenumber_list[i])
                 else:
                     incorrect_number.append(phonenumber_list[i])
-            all_OW_number = (asyncio.run(get_ow_number(data.get("url"))))
-            for i in [all_OW_number]:
+            all_OW_number = list(set(asyncio.run(get_ow_number(data.get("url")))))
+            for i in all_OW_number:
                 filternum = asyncio.run(get_number_list(i))
                 if filternum not in correct_number:
                     website_number.append(filternum)
