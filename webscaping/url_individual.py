@@ -13,6 +13,8 @@ urllib3.disable_warnings()
 
 async def get_all_urls(url):
     """GET all the link in the Website"""
+    if url[-1] == "/":
+        url = "".join([url[i] for i in range(len(url) - 1)])
     try:
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
             async with session.get(url, ssl=True) as requs:
@@ -27,7 +29,7 @@ async def get_all_urls(url):
                                         or "instagram" in str(get_specific_url)])]
 
         if len([i for i in urls_contact if re.compile("^[a-z]|/").findall((str(i)))]) >= 1:
-            get_d = [None if re.compile(f"http").findall(str(i)) or re.compile(f"/").findall(str(i)) else "/" + i
+            get_d = [None if re.findall(r"http", str(i)) or re.findall(r"/", str(i)) else "/" + i
                      for i in urls_contact]
             urls_contact2 = [str(url) + "/" + str(i[1::]) for i in itertools.chain(urls_contact, get_d) \
                              if str(i).startswith("/")]
@@ -49,11 +51,14 @@ async def get_all_text(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
     soup = [BeautifulSoup(requests.get(txt, verify=False).text, 'html.parser') for txt in await get_all_urls]
-    get_num = re.findall(r"[A-Za-z\w'a-z-&A-Za-z'0-9]+", str(soup).strip())
-    store_number_info.append(get_num)
+    get_string = re.findall(r"[A-Za-z\w'a-z-&A-Za-z]+|[0-9]+", str(soup).strip())
+    get_num = re.findall(r"[0-9]+", str(soup).strip())
+    # get_num = re.findall(r"[0-9]+", str(soup).strip())
+    store_number_info.append(get_string)
     comdine_text_value = [j for i in store_number_info for j in i]
+    comdine_num_value = [j for i in store_number_info for j in i]
     await asyncio.sleep(0.10)
-    return comdine_text_value
+    return comdine_text_value, get_num
 
 
 async def mixed_name(name, get_all_text):
@@ -110,10 +115,10 @@ def site_varification(get_text, error_massage):
         return ValueError
 
 
-def get_all_val(incorrect_val, top_name_incorrect, match, no_match, error_code):
+def get_all_val(incorrect_val, top_name_incorrect, match, no_match, error_code, social_media_page):
     try:
         return dict(Incorrect_val=incorrect_val, top_name_incorrect=top_name_incorrect,
-                    match=match, no_match=no_match, error_code=error_code)
+                    match=match, no_match=no_match, error_code=error_code, social_media_page=social_media_page)
     except Exception:
         return AttributeError
 
@@ -145,3 +150,4 @@ def extract_the_copyrights(url):
     return [get_name[0].strip()]
 
 
+# print(" ".join(asyncio.run(get_all_text(get_all_urls("https://www.facebook.com/toxicosantojitos/")))[1]))
