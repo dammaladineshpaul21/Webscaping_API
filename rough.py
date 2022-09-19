@@ -103,5 +103,5 @@ import time
 # resource_fields = {'name': fields.String, 'first_names': fields.List(fields.String)}
 # data = {'name': 'Bougnazal', 'first_names' : []}
 # print(json.dumps(marshal(data, resource_fields)))
-name = "+14797876104"
-print(name.isnumeric())
+# name = "+14797876104"
+# print(name.isnumeric())
