@@ -84,8 +84,8 @@ class Varify_phone_number(Resource):
             """Payload Section to get the Attributes"""
             parser = reqparse.RequestParser()
             parser.add_argument("url", type=str, required=True, help="This should be a Url")
-            parser.add_argument("Phone_number", action="append", type=str, required=True,
-                                help="This should be a Phone_number")
+            parser.add_argument("phone_number", action="append", type=str, required=True,
+                                help="This should be a phone_number")
             data = parser.parse_args()
             # urlobject = asyncio.run(get_all_urls(data.get("url")))
             urlobject2 = asyncio.run(phone_number_string(data.get("url")))
@@ -102,9 +102,9 @@ class Varify_phone_number(Resource):
                                     incorrect_number=incorrect_number,
                                     website_number=website_number,
                                     error_code=error_code[0]))
-            for i in range(len(data["Phone_number"])):
-                if not str(data["Phone_number"][i]).isidentifier():
-                    phonenumber_list.append(asyncio.run(get_number_list(data["Phone_number"][i])))
+            for i in range(len(data["phone_number"])):
+                if not str(data["phone_number"][i]).isidentifier():
+                    phonenumber_list.append(asyncio.run(get_number_list(data["phone_number"][i])))
             for i in range(len(phonenumber_list)):
                 if re.findall(asyncio.run(get_number_list(phonenumber_list[i])), " ".join(urlobject2).replace(" ", "")) \
                         and len(phonenumber_list[i]) >= 10:

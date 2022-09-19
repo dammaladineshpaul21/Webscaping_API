@@ -76,9 +76,10 @@ async def get_number_list(numbers_list):
         return e
 
 
-# # get_string_number = asyncio.run(phone_number_string("https://www.wylieisd.net"))
-# get_string_number2 = asyncio.run(get_ow_number("https://www.wylieisd.net"))
-# # print(get_string_number)
+# get_string_number = asyncio.run(phone_number_string("https://www.buffaloschools.org/PS355"))
+# # get_string_number2 = asyncio.run(get_ow_number("https://www.wylieisd.net"))
+# print(get_string_number)
+
 # print(get_string_number2)
 # # # # print(" ".join(get_string_number).replace(" ", ""))
 # # # print(asyncio.run(get_number_list(("(626) 777 6666"))))

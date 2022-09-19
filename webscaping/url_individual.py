@@ -126,7 +126,7 @@ async def error_check(get_all_urls):
                 soup = BeautifulSoup(await requs.text(), 'html.parser')
             await session.close()
         store_number_info = []
-        get_num = re.findall(r"[A-Za-z\w'a-z-&A-Za-z'a-z]+", str(soup).strip())
+        get_num = re.findall(r"[A-Za-z\w'a-z-&A-Za-z'a-z0-9]+", str(soup).strip())
         store_number_info.append(get_num)
         comdine_text_value = [j for i in store_number_info for j in i]
         await asyncio.sleep(0.10)
@@ -145,3 +145,4 @@ def extract_the_copyrights(url):
     return [get_name[0].strip()]
 
 
+# print(asyncio.run(error_check("http://smokedropsmokeshop.com")))
