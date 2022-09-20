@@ -1,3 +1,5 @@
+import asyncio
+
 from webscaping.url_individual import *
 
 
@@ -35,16 +37,16 @@ async def get_ow_number(url):
             numbersextraction2 = re.findall(r"\(\d{3}\)|\d{3}-\d{4}|\d{3} \d{4}|\d{3}-\d{3}-\d{4}", str(soup))
             numbersextraction3 = re.findall(r"\d{3}\W\d{3}\W\d{4}", str(soup))
             get_first_number = re.findall(r"\(\d{3}\)", str(soup))
-            if re.findall(r"\d{3}-\d{3}-\d{4}", str(soup)):
+            if re.findall(r"\d{3}-\d{3}-\d{4}|\d{3}-\d{3}-\d{4}/\d{4}", str(soup)):
                 await asyncio.sleep(0.5)
-                return re.findall(r"\d{3}-\d{3}-\d{4}", str(soup))
+                return re.findall(r"\d{3}-\d{3}-\d{4}|\d{3}-\d{3}-\d{4}/\d{4}", str(soup))
             elif re.findall(r"\(\d{3}\)", str(soup)):
                 if len(numbersextraction3) >= 1:
                     return numbersextraction3
                 else:
                     get_index_number = numbersextraction.index(get_first_number[0])
                     await asyncio.sleep(0.5)
-                    return numbersextraction[get_index_number]+" "+numbersextraction[get_index_number + 1]
+                    return numbersextraction[get_index_number] + " " + numbersextraction[get_index_number + 1]
             elif re.findall(r"\W\d{11}", str(soup)):
                 store_number = []
                 await asyncio.sleep(0.5)
@@ -52,6 +54,9 @@ async def get_ow_number(url):
                     if str(i).startswith("+"):
                         store_number.append(i)
                 return store_number
+            elif re.findall(r"\d{3}-\d{3}-\d{4}/\d{4}", str(soup)):
+                await asyncio.sleep(0.5)
+                return re.findall(r"\d{3}-\d{3}-\d{4}/\d{4}", str(soup))
             else:
                 await asyncio.sleep(0.5)
                 return None
@@ -73,10 +78,18 @@ async def get_number_list(numbers_list):
         return e
 
 
-# get_string_number = asyncio.run(get_ow_number("https://www.wylieisd.net"))
-# # get_string_number2 = asyncio.run(get_ow_number("https://www.wylieisd.net"))
-# print(get_string_number)
-# # print(get_string_number2)
-# # # # # print(" ".join(get_string_number).replace(" ", ""))
-# # # # print(asyncio.run(get_number_list(("(626) 777 6666"))))
+def url_with_number(url):
+    url_list = []
+    store_ow_number = []
+    for i in asyncio.run(get_all_urls(url)):
+        store_number = set(asyncio.run(get_ow_number(i)))
+        url_list.append(i)
+        store_ow_number.append(store_number)
+    res = {}
+    for key in url_list:
+        for value in store_ow_number:
+            res[key] = value
+            store_ow_number.remove(value)
+            break
+    return json.dumps(str(res))
 

@@ -1,7 +1,7 @@
 import asyncio
 from flask import Flask, Blueprint
 from flask_restful import Api
-from webscaping.main import Name_phone_number
+from webscaping.main import Varify_name, Varify_phone_number
 
 
 async def main():
@@ -11,12 +11,13 @@ async def main():
     api = Api(api_bp)
 
     app.register_blueprint(api_bp)
-    # api.add_resource(Varify_name, "/poi-attribute/name", methods=['POST'])
-    # api.add_resource(Varify_phone_number, "/poi-attribute/phonenumbr", methods=['POST'])
-    api.add_resource(Name_phone_number, "/poi-attribute/name-phonenumber", methods=['POST'])
+    api.add_resource(Varify_name, "/poi-attribute/name", methods=['POST'])
+    api.add_resource(Varify_phone_number, "/poi-attribute/phonenumber", methods=['POST'])
     await asyncio.sleep(0.5)
     return app
 
 
 if __name__ == "__main__":
     asyncio.run(main()).run(debug=True)
+
+

@@ -47,6 +47,11 @@ async def get_all_urls(url):
         return e
 
 
+def extract_social_mediapage(get_all_urls):
+    get_socialmedia = [i for i in get_all_urls if "facebook" in i or "instagram" in i]
+    return json.dumps(str(get_socialmedia))
+
+
 async def get_all_text(get_all_urls):
     """Will Execute all the text retived from the ULR"""
     store_number_info = []
@@ -115,7 +120,8 @@ def site_varification(get_text, error_massage):
         return ValueError
 
 
-def get_all_val(incorrect_val, top_name_incorrect, match, no_match, error_code, social_media_page):
+def get_all_val(incorrect_val, top_name_incorrect, match, no_match,
+                error_code, social_media_page):
     try:
         return dict(Incorrect_val=incorrect_val, top_name_incorrect=top_name_incorrect,
                     match=match, no_match=no_match, error_code=error_code, social_media_page=social_media_page)
@@ -148,6 +154,3 @@ def extract_the_copyrights(url):
         get_name.append(copyrighttexts)
     get_name.append(soup.title.string)
     return [get_name[0].strip()]
-
-
-# print(" ".join(asyncio.run(get_all_text(get_all_urls("https://www.facebook.com/toxicosantojitos/")))[1]))
