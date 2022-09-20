@@ -26,7 +26,9 @@ async def get_all_urls(url):
                                         or "about" in str(get_specific_url) \
                                         or "facebook" in str(get_specific_url) \
                                         or "main" in str(get_specific_url) \
-                                        or "instagram" in str(get_specific_url)])]
+                                        or "instagram" in str(get_specific_url)
+                                        or "yelp" in str(get_specific_url)
+                                        or "tripadvisor" in str(get_specific_url)])]
 
         if len([i for i in urls_contact if re.compile("^[a-z]|/").findall((str(i)))]) >= 1:
             get_d = [None if re.findall(r"http", str(i)) or re.findall(r"/", str(i)) else "/" + i
@@ -49,7 +51,8 @@ async def get_all_urls(url):
 
 def extract_social_mediapage(get_all_urls):
     get_socialmedia = [i for i in get_all_urls if "facebook" in i or "instagram" in i]
-    return json.dumps(str(get_socialmedia))
+    get_third_party = [i for i in get_all_urls if "yelp" in i or "tripadvisor" in i]
+    return json.dumps(str(get_socialmedia)), json.dumps(str(get_third_party))
 
 
 async def get_all_text(get_all_urls):
@@ -121,10 +124,11 @@ def site_varification(get_text, error_massage):
 
 
 def get_all_val(incorrect_val, top_name_incorrect, match, no_match,
-                error_code, social_media_page):
+                error_code, social_media_page, thired_party):
     try:
         return dict(Incorrect_val=incorrect_val, top_name_incorrect=top_name_incorrect,
-                    match=match, no_match=no_match, error_code=error_code, social_media_page=social_media_page)
+                    match=match, no_match=no_match, error_code=error_code, social_media_page=social_media_page,
+                    thired_party=thired_party)
     except Exception:
         return AttributeError
 
@@ -154,3 +158,4 @@ def extract_the_copyrights(url):
         get_name.append(copyrighttexts)
     get_name.append(soup.title.string)
     return [get_name[0].strip()]
+

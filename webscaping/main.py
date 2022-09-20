@@ -38,15 +38,17 @@ class Payload(Resource):
 
 
 class Varify_name(Payload):
+
     def post(self):
         try:
             get_result, non_match, get_correct_name, get_incorrect_name = [], [], [], []
             error_code = Payload.error_page(self)
-            social_media_page = self.social
+            social_media_page = json.loads(self.social[0])
+            thired_party = json.loads(self.social[1])
             if int(len(self.call_mixed_name)) > 0:
                 get_correct_name.append(self.call_mixed_name)
                 return jsonify(get_all_val(get_result, non_match, get_correct_name[0],
-                                           get_incorrect_name, error_code, social_media_page))
+                                           get_incorrect_name, error_code, social_media_page, thired_party))
             for i in str(self.data["name"][0]).split():
                 if re.findall(i, str(self.url_object_string)):
                     pass
@@ -82,12 +84,13 @@ class Varify_name(Payload):
                     else:
                         non_match.append(self.data["name"][0])
             return jsonify(get_all_val(get_result, non_match, get_correct_name,
-                                       get_incorrect_name, error_code, social_media_page))
+                                       get_incorrect_name, error_code, social_media_page, thired_party))
         except Exception as e:
             abort(500, Error_value=f"Unable to process [url and phone_number]/[Broken URL] request or {e}")
 
 
 class Varify_phone_number(Varify_name):
+
     def post(self):
         try:
             phonenumber_list, incorrect_number, correct_number, \
@@ -103,11 +106,15 @@ class Varify_phone_number(Varify_name):
                     correct_number.append(phonenumber_list[i])
                 else:
                     incorrect_number.append(phonenumber_list[i])
-            all_OW_number = list(set(asyncio.run(get_ow_number(self.data.get("url")))))
-            for i in all_OW_number:
-                filternum = asyncio.run(get_number_list(i))
-                if filternum not in correct_number:
-                    website_number.append(filternum)
+            all_OW_number = asyncio.run(get_ow_number(self.data.get("url")))
+            if len(all_OW_number) == 1:
+                if all_OW_number[0] not in correct_number:
+                    website_number.append(all_OW_number[0])
+            else:
+                for i in all_OW_number[0]:
+                    filternum = asyncio.run(get_number_list(i))
+                    if filternum not in correct_number:
+                        website_number.append(filternum)
             return jsonify(dict(correct_number=correct_number,
                                 incorrect_number=incorrect_number,
                                 website_number=website_number,
