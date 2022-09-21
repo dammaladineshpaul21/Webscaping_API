@@ -121,6 +121,6 @@ class Varify_phone_number(Resource):
                         website_number.append(filternum)
             return jsonify(dict(correct_number=correct_number,
                                 incorrect_number=incorrect_number,
-                                website_number=website_number))
+                                website_number=website_number[0]))
         except Exception as e:
             abort(500, Error_value=f"Unable to process [url and phone_number]/[Broken URL] request or {e}")

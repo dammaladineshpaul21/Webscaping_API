@@ -147,4 +147,4 @@ def extract_the_copyrights(url):
     return [get_name[0].strip()]
 
 
-# print(asyncio.run(get_all_urls("https://www.caautoglassf.com/")))
+# print(" ".join(asyncio.run(get_all_text(get_all_urls("https://sites.google.com/jefferson.kyschools.us/waggenerhighschool/home")))))
