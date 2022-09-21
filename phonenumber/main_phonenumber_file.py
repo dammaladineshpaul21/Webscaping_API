@@ -26,9 +26,8 @@ async def get_number_list(numbers_list):
     """Get the individul number provided in the payload
     and filter all the Spacial Character from the single number the
     and give a raw string of only containing number."""
-    numbers_ = "".join(reversed(" ".join(reversed(numbers_list)).replace(" ", "")[0:10]))
     try:
-        filter_number = re.findall(r"[0-9]+", numbers_)
+        filter_number = "".join(reversed(" ".join(reversed(re.findall(r"[0-9]", numbers_list))).replace(" ", "")[0:10]))
         await asyncio.sleep(0.0)
         return " ".join(filter_number).replace(" ", "")
     except Exception as e:
@@ -57,4 +56,3 @@ def url_with_number(url):
         return json.dumps(str(res))
     except Exception:
         return "Url with number has an issue"
-
