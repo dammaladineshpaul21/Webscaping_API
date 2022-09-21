@@ -24,6 +24,7 @@ async def get_all_urls(url):
         urls_contact = [i for i in set([get_specific_url for get_specific_url in set(urls) \
                                         if "location" in str(get_specific_url) or "contact" in str(get_specific_url) \
                                         or "about" in str(get_specific_url) \
+                                        or "store" in str(get_specific_url) \
                                         or "facebook" in str(get_specific_url) \
                                         or "main" in str(get_specific_url) \
                                         or "instagram" in str(get_specific_url)])]
@@ -83,7 +84,7 @@ async def check_spacial_case(name, file_pass):
                 for val in name.split():
                     get_val = [i for i in [None if re.compile(r"[A-Za-z]").findall(i) else i for i in val] if
                                i is not None]
-                    get_final_Re = [i for i in list(itertools.chain(*[list(map(lambda x: x if get_val[i] in x else None, \
+                    get_final_Re = [i for i in list(itertools.chain(*[list(map(lambda x: x if get_val[i] in x else None,
                                                                                get_sp_char)) for i in
                                                                       range(len(get_val))]))
                                     if i is not None]
@@ -145,6 +146,3 @@ def extract_the_copyrights(url):
         get_name.append(copyrighttexts)
     get_name.append(soup.title.string)
     return [get_name[0].strip()]
-
-
-# print(" ".join(asyncio.run(get_all_text(get_all_urls("https://www.grandwineandspirits.com")))))
