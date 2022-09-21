@@ -17,24 +17,11 @@ class Payload(Resource):
         self.urlobject2 = self.data.get("url", None)
         self.name_object = self.data.get("name", None)
         self.phone_number_list = self.data.get("phone_number", None)
-        self.url_object = asyncio.run(get_all_urls(self.data.get("url")))
-        self.social = extract_social_mediapage(asyncio.run(get_all_urls(self.data.get("url"))))
-        self.url_object_string = asyncio.run(get_all_text(get_all_urls(self.data.get("url"))))[0]
-        self.url_object_number = asyncio.run(get_all_text(get_all_urls(self.data.get("url"))))[1]
-        self.error_page = asyncio.run(error_check(self.data.get("url")))
+        self.url_object = loop.run_until_complete(get_all_urls(self.data.get("url")))
+        # self.social = asyncio.run(extract_social_mediapage(asyncio.run(get_all_urls(self.data.get("url")))))
+        self.url_object_string = asyncio.run(get_all_text(self.url_object))[0]
+        self.error_page = asyncio.run(error_check(self.url_object[0]))
         self.call_mixed_name = asyncio.run(mixed_name(self.data["name"], self.url_object_string))
-        self.url_with_number = url_with_number(self.data.get("url"))
-        self.error_massage = ["HTTP Error 503", "404 forbidden", "404 Not Found", "Error 404 - Page Not Found",
-                              "Domain for Sale", "Mod_Security"
-                                                 "404 Error Pages", "errorCode 1020", "403 Forbidden",
-                              "Error Page cannot be displayed", "Domain Not Claimed", "This domain is for sale"]
-
-    @staticmethod
-    def error_page(self):
-        error_code = []
-        if len(site_varification(" ".join(self.error_page), self.error_massage)) != 0:
-            error_code.append(site_varification(" ".join(self.error_page), self.error_massage))
-            return error_code[0]
 
 
 class Varify_name(Payload):
@@ -42,13 +29,16 @@ class Varify_name(Payload):
     def post(self):
         try:
             get_result, non_match, get_correct_name, get_incorrect_name = [], [], [], []
-            error_code = Payload.error_page(self)
-            social_media_page = json.loads(self.social[0])
-            thired_party = json.loads(self.social[1])
+            error_code = []
             if int(len(self.call_mixed_name)) > 0:
                 get_correct_name.append(self.call_mixed_name)
                 return jsonify(get_all_val(get_result, non_match, get_correct_name[0],
-                                           get_incorrect_name, error_code, social_media_page, thired_party))
+                                           get_incorrect_name, error_code))
+            call_error_code = asyncio.run(site_varification(" ".join(self.error_page)))
+            if any(call_error_code):
+                error_code.append(call_error_code[0])
+                return jsonify(get_all_val(get_result, non_match, get_correct_name,
+                                           get_incorrect_name, error_code))
             for i in str(self.data["name"][0]).split():
                 if re.findall(i, str(self.url_object_string)):
                     pass
@@ -58,17 +48,21 @@ class Varify_name(Payload):
                         pass
                     else:
                         get_result.append(i)
+
             # # Name checking all name in the list Correct and Incorrect
             # # Checks the Already Existing correct name
+            def check_single_name(i):
+                return re.findall(self.data["name"][i], " ".join(self.url_object_string))
+
             if int(len(get_result)) == 0:
                 for i in range(len(self.data["name"])):
-                    if re.findall(self.data["name"][i], " ".join(self.url_object_string)):
+                    if any(check_single_name(i)):
                         get_correct_name.append(self.data["name"][i])
                     else:
                         get_incorrect_name.append(self.data["name"][i])
             else:
                 for i in range(len(self.data["name"])):
-                    if re.findall(self.data["name"][i], " ".join(self.url_object_string)):
+                    if any(check_single_name(i)):
                         get_correct_name.append(self.data["name"][i])
                     else:
                         get_incorrect_name.append(self.data["name"][i])
@@ -84,21 +78,27 @@ class Varify_name(Payload):
                     else:
                         non_match.append(self.data["name"][0])
             return jsonify(get_all_val(get_result, non_match, get_correct_name,
-                                       get_incorrect_name, error_code, social_media_page, thired_party))
+                                       get_incorrect_name, error_code))
         except Exception as e:
             abort(500, Error_value=f"Unable to process [url and phone_number]/[Broken URL] request or {e}")
 
 
-class Varify_phone_number(Varify_name):
+class Varify_phone_number(Payload):
+
+    def __init__(self):
+        super().__init__()
+        self.url_with_number = json.loads(url_with_number(self.data.get("url")))
+        self.url_object_number = asyncio.run(get_all_text(self.url_object))[1]
 
     def post(self):
         try:
-            phonenumber_list, incorrect_number, correct_number, \
-            website_number, result, error_code = [], [], [], [], [], Payload.error_page(self)
-            url_with_number = json.loads(self.url_with_number)
+            phonenumber_list, incorrect_number, correct_number, website_number, result, website_with_number = [], [], \
+                                                                                                              [], [], [], []
+            # url_with_number = json.loads(self.url_with_number)
             for i in range(len(self.data["phone_number"])):
                 if not str(self.data["phone_number"][i]).isidentifier():
                     phonenumber_list.append(asyncio.run(get_number_list(self.data["phone_number"][i])))
+
             for i in range(len(phonenumber_list)):
                 if re.findall(asyncio.run(get_number_list(phonenumber_list[i])),
                               " ".join(self.url_object_number).replace(" ", "")) \
@@ -106,7 +106,15 @@ class Varify_phone_number(Varify_name):
                     correct_number.append(phonenumber_list[i])
                 else:
                     incorrect_number.append(phonenumber_list[i])
+
             all_OW_number = asyncio.run(get_ow_number(self.data.get("url")))
+
+            if len(all_OW_number) == 0:
+                website_number.append("No Phone Number")
+                return jsonify(dict(incorrect_number=incorrect_number,
+                                    correct_number=correct_number,
+                                    website_number={self.data.get("url"): website_number},
+                                    url_with_number=self.url_with_number))
             if len(all_OW_number) == 1:
                 if all_OW_number[0] not in correct_number:
                     website_number.append(all_OW_number[0])
@@ -115,9 +123,10 @@ class Varify_phone_number(Varify_name):
                     filternum = asyncio.run(get_number_list(i))
                     if filternum not in correct_number:
                         website_number.append(filternum)
-            return jsonify(dict(correct_number=correct_number,
-                                incorrect_number=incorrect_number,
-                                website_number=website_number,
-                                url_with_number=url_with_number))
+            return jsonify(dict(incorrect_number=incorrect_number,
+                                correct_number=correct_number,
+                                website_number={self.data.get("url"): website_number},
+                                url_with_number=self.url_with_number))
+
         except Exception as e:
             abort(500, Error_value=f"Unable to process [url and phone_number]/[Broken URL] request or {e}")
