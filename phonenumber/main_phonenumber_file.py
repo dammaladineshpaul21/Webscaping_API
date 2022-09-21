@@ -33,31 +33,24 @@ async def get_ow_number(url):
                 soup = BeautifulSoup(await requs.text(), 'html.parser')
             await session.close()
             numbersextraction = re.findall(r"\(\d{3}\)|\d{3}-\d{4}|\d{3} \d{4}|\d{3}-\d{3}-\d{4}|\d{3}\W\d{4}"
-                                           r"\W\d{11}|\d{3}\W\d{3}\W\d{4}",
-                                           str(soup))
-            numbersextraction2 = re.findall(r"\(\d{3}\)|\d{3}-\d{4}|\d{3} \d{4}|\d{3}-\d{3}-\d{4}", str(soup))
-            numbersextraction3 = re.findall(r"\d{3}\W\d{3}\W\d{4}", str(soup))
+                                           r"\W\d{11}|\d{3}\W\d{3}\W\d{4}", str(soup))
+            phone_pattern = [r"\d{3}\W\d{3}\W\d{4}/\d{4}",
+                             r"\d{3}\W\d{3}\W\d{4}|\d{1}-\d{3}-\d{3}-\d{4}"]
             get_first_number = re.findall(r"\(\d{3}\)", str(soup))
-            if re.findall(r"\d{3}-\d{3}-\d{4}", str(soup)):
-                await asyncio.sleep(0.5)
-                return re.findall(r"\d{3}-\d{3}-\d{4}", str(soup))
-            elif re.findall(r"\(\d{3}\)", str(soup)):
+            numbersextraction3 = re.findall(r"\d{3}\W\d{3}\W\d{4}", str(soup))
+            store_phone_number = []
+            if re.findall(r"\(\d{3}\)", str(soup)):
                 if len(numbersextraction3) >= 1:
-                    return numbersextraction3
+                    return [numbersextraction3]
                 else:
                     get_index_number = numbersextraction.index(get_first_number[0])
                     await asyncio.sleep(0.5)
-                    return numbersextraction[get_index_number]+" "+numbersextraction[get_index_number + 1]
-            elif re.findall(r"\W\d{11}", str(soup)):
-                store_number = []
-                await asyncio.sleep(0.5)
-                for i in re.findall(r"\W\d{11}", str(soup)):
-                    if str(i).startswith("+"):
-                        store_number.append(i)
-                return store_number
-            else:
-                await asyncio.sleep(0.5)
-                return numbersextraction
+                    return [numbersextraction[get_index_number] + " " + numbersextraction[get_index_number + 1]]
+            for i in range(len(phone_pattern)):
+                if re.findall(phone_pattern[i], str(soup)):
+                    store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
+            await asyncio.sleep(0.5)
+            return store_phone_number
     except Exception as e:
         await asyncio.sleep(0.5)
         return e
@@ -77,8 +70,8 @@ async def get_number_list(numbers_list):
 
 
 # get_string_number = asyncio.run(phone_number_string("https://www.buffaloschools.org/PS355"))
-# # get_string_number2 = asyncio.run(get_ow_number("https://www.wylieisd.net"))
-# print(get_string_number)
+get_string_number2 = asyncio.run(get_ow_number("https://www.buffaloschools.org/PS355"))
+print(get_string_number2)
 
 # print(get_string_number2)
 # # # # print(" ".join(get_string_number).replace(" ", ""))

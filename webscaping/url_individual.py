@@ -13,6 +13,8 @@ urllib3.disable_warnings()
 
 async def get_all_urls(url):
     """GET all the link in the Website"""
+    if url[-1] == "/":
+        url = "".join([url[i] for i in range(len(url) - 1)])
     try:
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
             async with session.get(url, ssl=True) as requs:
@@ -145,4 +147,4 @@ def extract_the_copyrights(url):
     return [get_name[0].strip()]
 
 
-# print(asyncio.run(error_check("http://smokedropsmokeshop.com")))
+# print(asyncio.run(get_all_urls("https://www.caautoglassf.com/")))

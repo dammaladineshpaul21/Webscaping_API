@@ -12,7 +12,7 @@ async def main():
 
     app.register_blueprint(api_bp)
     api.add_resource(Varify_name, "/poi-attribute/name", methods=['POST'])
-    api.add_resource(Varify_phone_number, "/poi-attribute/phonenumbr", methods=['POST'])
+    api.add_resource(Varify_phone_number, "/poi-attribute/phonenumber", methods=['POST'])
     await asyncio.sleep(0.5)
     return app
 

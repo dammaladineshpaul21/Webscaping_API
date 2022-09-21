@@ -111,11 +111,14 @@ class Varify_phone_number(Resource):
                     correct_number.append(phonenumber_list[i])
                 else:
                     incorrect_number.append(phonenumber_list[i])
-            all_OW_number = list(set(asyncio.run(get_ow_number(data.get("url")))))
-            for i in all_OW_number:
-                filternum = asyncio.run(get_number_list(i))
-                if filternum not in correct_number:
-                    website_number.append(filternum)
+            all_OW_number = asyncio.run(get_ow_number(data.get("url")))
+            if len(all_OW_number) == 1:
+                website_number.append(all_OW_number[0])
+            else:
+                for i in [all_OW_number]:
+                    filternum = asyncio.run(get_number_list(i))
+                    if filternum not in correct_number:
+                        website_number.append(filternum)
             return jsonify(dict(correct_number=correct_number,
                                 incorrect_number=incorrect_number,
                                 website_number=website_number))
