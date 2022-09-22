@@ -1,4 +1,5 @@
-from webscaping.url_individual import *
+from webscaping_file.url_individual import *
+import json
 
 
 async def get_ow_number(url):
@@ -15,7 +16,7 @@ async def get_ow_number(url):
             for i in range(len(phone_pattern)):
                 if re.findall(phone_pattern[i], str(soup)):
                     store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.0)
             return store_phone_number
     except Exception as e:
         await asyncio.sleep(0.5)
@@ -54,5 +55,5 @@ def url_with_number(url):
                     res[key] = value[0]
                     store_ow_number.remove(value)
         return json.dumps(str(res))
-    except Exception:
-        return "Url with number has an issue"
+    except Exception as e:
+        return f"Url with number has an issue {e}"
