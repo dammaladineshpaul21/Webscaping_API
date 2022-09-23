@@ -16,8 +16,7 @@ class Varify_phone_number(Varify_name):
     def post(self):
         try:
             phonenumber_list, incorrect_number, correct_number, website_number, result, website_with_number = [], [], \
-                                                                                                              [], [], [], []
-            # url_with_number = json.loads(self.url_with_number)
+                                                                                                        [], [], [], []
             for i in range(len(self.data["phone_number"])):
                 if not str(self.data["phone_number"][i]).isidentifier():
                     phonenumber_list.append(asyncio.run(get_number_list(self.data["phone_number"][i])))
@@ -31,12 +30,11 @@ class Varify_phone_number(Varify_name):
                     incorrect_number.append(phonenumber_list[i])
 
             all_OW_number = asyncio.run(get_ow_number(self.data.get("url")))
-
             if len(all_OW_number) == 0:
                 website_number.append("No Phone Number")
                 return jsonify(dict(incorrect_number=incorrect_number,
                                     correct_number=correct_number,
-                                    website_number={self.data.get("url"): website_number},
+                                    website_number=website_number,
                                     url_with_number=self.url_with_number))
             if len(all_OW_number) == 1:
                 if all_OW_number[0] not in correct_number:
@@ -48,7 +46,7 @@ class Varify_phone_number(Varify_name):
                         website_number.append(filternum)
             return jsonify(dict(incorrect_number=incorrect_number,
                                 correct_number=correct_number,
-                                website_number={self.data.get("url"): website_number},
+                                website_number=website_number,
                                 url_with_number=self.url_with_number))
 
         except Exception as e:

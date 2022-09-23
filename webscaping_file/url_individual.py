@@ -5,7 +5,6 @@ import itertools
 import asyncio
 import aiohttp
 import urllib3
-from name.name_validation_function import error_check
 
 urllib3.disable_warnings()
 
@@ -47,7 +46,7 @@ async def get_all_urls(url):
             await asyncio.sleep(0.5)
             return get_full_filter_url
     except Exception as e:
-        return e
+        return f"Invalid URL Provided By the user at {url} and {e}"
 
 
 async def get_all_text(all_urls):
@@ -57,13 +56,8 @@ async def get_all_text(all_urls):
     soup = [BeautifulSoup(requests.get(txt, verify=False).text, 'html.parser') for txt in get_filter_url]
     get_string = re.findall(r"[A-Za-z\w'a-z-&A-Za-z]+|[0-9]+", str(soup).strip())
     get_num = re.findall(r"[0-9]+", str(soup).strip())
-    # get_num = re.findall(r"[0-9]+", str(soup).strip())
     store_number_info.append(get_string)
     comdine_text_value = [j for i in store_number_info for j in i]
-    task_1 = asyncio.create_task(error_check(all_urls[0]))
-    await task_1
     await asyncio.sleep(0.20)
     return comdine_text_value, get_num
 
-
-loop = asyncio.get_event_loop()
