@@ -11,12 +11,13 @@ class Varify_phone_number(Varify_name):
     def __init__(self):
         super().__init__()
         self.url_with_number = json.loads(url_with_number(self.data.get("url")))
-        self.url_object_number = asyncio.run(get_all_text(self.url_object))[1]
+        self.url_object_number = get_all_text(self.url_object)[1]
 
     def post(self):
         try:
             phonenumber_list, incorrect_number, correct_number, website_number, result, website_with_number = [], [], \
                                                                                                         [], [], [], []
+
             for i in range(len(self.data["phone_number"])):
                 if not str(self.data["phone_number"][i]).isidentifier():
                     phonenumber_list.append(asyncio.run(get_number_list(self.data["phone_number"][i])))
@@ -37,7 +38,7 @@ class Varify_phone_number(Varify_name):
                                     website_number=website_number,
                                     url_with_number=self.url_with_number))
             if len(all_OW_number) == 1:
-                if all_OW_number[0] not in correct_number:
+                if asyncio.run(get_number_list(str(all_OW_number[0]))) not in correct_number:
                     website_number.append(all_OW_number[0])
             else:
                 for i in all_OW_number[0]:
@@ -48,6 +49,5 @@ class Varify_phone_number(Varify_name):
                                 correct_number=correct_number,
                                 website_number=website_number,
                                 url_with_number=self.url_with_number))
-
         except Exception as e:
             abort(500, Error_value=f"Unable to process [url and phone_number]/[Broken URL] request or {e}")

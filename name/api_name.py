@@ -25,9 +25,9 @@ class Varify_name(Payload):
 
     def __init__(self):
         super().__init__()
-        self.url_object = asyncio.run(get_all_urls(self.data.get("url")))
+        self.url_object = get_all_urls(self.data.get("url"))
         self.error_page = asyncio.run(error_check(self.url_object[0]))
-        self.url_object_string = asyncio.run(get_all_text(self.url_object))[0]
+        self.url_object_string = get_all_text(self.url_object)[0]
         self.call_mixed_name = asyncio.run(mixed_name(self.data["name"], self.url_object_string))
 
     def post(self):

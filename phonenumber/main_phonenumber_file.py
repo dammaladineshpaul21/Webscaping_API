@@ -1,5 +1,7 @@
 from webscaping_file.url_individual import *
 import json
+import asyncio
+import aiohttp
 
 
 async def get_ow_number(url):
@@ -10,14 +12,14 @@ async def get_ow_number(url):
             async with session.get(url, ssl=True) as requs:
                 soup = BeautifulSoup(await requs.text(), 'html.parser')
             await session.close()
-            phone_pattern = [r"\d{3}\W\d{3}\W\d{4}/\d{4}", r"\(\d{3}\) \d{3}-\d{4}",
-                             r"\d{3}\W\d{3}\W\d{4}|\d{1}-\d{3}-\d{3}-\d{4}"]
-            store_phone_number = []
-            for i in range(len(phone_pattern)):
-                if re.findall(phone_pattern[i], str(soup)):
-                    store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
-            await asyncio.sleep(0.0)
-            return store_phone_number
+        phone_pattern = [r"\d{3}\W\d{3}\W\d{4}/\d{4}", r"\(\d{3}\) \d{3}-\d{4}",
+                         r"\d{3}\W\d{3}\W\d{4}|\d{1}-\d{3}-\d{3}-\d{4}"]
+        store_phone_number = []
+        for i in range(len(phone_pattern)):
+            if re.findall(phone_pattern[i], str(soup)):
+                store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
+        await asyncio.sleep(0.0)
+        return store_phone_number
     except Exception as e:
         await asyncio.sleep(0.5)
         return e
@@ -41,7 +43,7 @@ def url_with_number(url):
         url_list = []
         store_ow_number = []
         for i in [i for i in
-                  [None if re.findall(r"facebook|instagram", i) else i for i in asyncio.run(get_all_urls(url))]
+                  [None if re.findall(r"facebook|instagram", i) else i for i in get_all_urls(url)]
                   if i is not None]:
             store_number = asyncio.run(get_ow_number(i))
             url_list.append(i)
@@ -59,3 +61,4 @@ def url_with_number(url):
         return f"Url with number has an issue {e}"
 
 
+url_with_number_njit = njit()(url_with_number)
