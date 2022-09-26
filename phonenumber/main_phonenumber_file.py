@@ -18,7 +18,7 @@ async def get_ow_number(url):
             if re.findall(phone_pattern[i], str(soup)):
                 # store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
                 store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
-        await asyncio.sleep(0.0)
+        await asyncio.sleep(0.25)
         return store_phone_number
     except Exception as e:
         await asyncio.sleep(0.5)
@@ -31,14 +31,13 @@ async def get_number_list(numbers_list):
     and give a raw string of only containing number."""
     try:
         filter_number = "".join(reversed(" ".join(reversed(re.findall(r"[0-9]", numbers_list))).replace(" ", "")[0:10]))
-        await asyncio.sleep(0.0)
+        await asyncio.sleep(0.25)
         return " ".join(filter_number).replace(" ", "")
     except Exception as e:
-        await asyncio.sleep(0.0)
+        await asyncio.sleep(0.25)
         return e
     finally:
         pass
-
 
 # def url_with_number(url):
 #     try:

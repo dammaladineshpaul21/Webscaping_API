@@ -36,7 +36,7 @@ class Varify_phone_number(Varify_name):
                                     website_number=website_number))
             if len(all_OW_number[0]) == 1:
                 if asyncio.run(get_number_list(str(all_OW_number[0]))) not in correct_number:
-                    website_number.append(all_OW_number[0])
+                    website_number.append(all_OW_number[0][0])
             else:
                 for i in all_OW_number[0]:
                     filternumber = asyncio.run(get_number_list(i))
@@ -44,6 +44,6 @@ class Varify_phone_number(Varify_name):
                         website_number.append(filternumber)
             return jsonify(dict(incorrect_number=incorrect_number,
                                 correct_number=correct_number,
-                                website_number=[i for i in website_number]))
+                                website_number=website_number))
         except Exception as e:
             abort(500, Error_value=f"Unable to process [url and phone_number]/[Broken URL] request or {e}")
