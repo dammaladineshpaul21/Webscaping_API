@@ -39,10 +39,6 @@ class Varify_name(Payload):
                 error_code.append(call_error_code[0])
                 return jsonify(get_all_val(get_result, non_match, get_correct_name,
                                            get_incorrect_name, error_code))
-            if int(len(self.call_mixed_name)) > 0:
-                get_correct_name.append(self.call_mixed_name)
-                return jsonify(get_all_val(get_result, non_match, get_correct_name[0],
-                                           get_incorrect_name, error_code))
             for i in np.array(str(self.data["name"][0]).split()):
                 if re.findall(i, str(self.url_object_string)):
                     pass
@@ -58,10 +54,13 @@ class Varify_name(Payload):
             def check_single_name(single_name):
                 return re.findall(self.data["name"][single_name], " ".join(self.url_object_string))
 
+            # Check the individual name of the string
             if int(len(get_result)) == 0:
                 for i in range(len(self.data["name"])):
+                    # if name match's in the Data extracted from Website append to Correct Name
                     if any(check_single_name(i)):
                         get_correct_name.append(self.data["name"][i])
+                    # if name match's in the Data extracted from Website append to Incorrect Name
                     else:
                         get_incorrect_name.append(self.data["name"][i])
             else:
@@ -81,6 +80,10 @@ class Varify_name(Payload):
                         pass
                     else:
                         non_match.append(self.data["name"][0])
+            if len(get_correct_name) == 0 and int(len(self.call_mixed_name)) > 0:
+                get_correct_name.append(self.call_mixed_name)
+                # return jsonify(get_all_val(get_result, non_match, get_correct_name[0],
+                #                            get_incorrect_name, error_code))
             return jsonify(get_all_val(get_result, non_match, get_correct_name,
                                        get_incorrect_name, error_code))
         except Exception as e:

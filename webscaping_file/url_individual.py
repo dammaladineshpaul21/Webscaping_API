@@ -18,10 +18,10 @@ def get_all_urls(url):
         async def activet_url(url):
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, ssl=True) as requs:
-                    soup = BeautifulSoup(await requs.text(), 'html.parser')
+                     if requs.status == 200:
+                        soup = BeautifulSoup(await requs.text(), 'html.parser')
                 await session.close()
                 return soup
-
         urls = [link.get('href') for link in asyncio.run(activet_url(url)).find_all('a')]
         urls_contact = [i for i in set([get_specific_url for get_specific_url in set(urls)
                                         if "location" in str(get_specific_url)
