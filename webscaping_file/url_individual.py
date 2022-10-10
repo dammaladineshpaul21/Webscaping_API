@@ -5,7 +5,8 @@ import itertools
 import asyncio
 import aiohttp
 import urllib3
-from numba import njit
+from numba import jit
+
 
 urllib3.disable_warnings()
 
@@ -17,22 +18,28 @@ def get_all_urls(url):
     try:
         async def activet_url(url):
             async with aiohttp.ClientSession() as session:
-                async with session.get(url, ssl=True) as requs:
-                     if requs.status == 200:
+                async with session.get(url, ssl=True, timeout=7) as requs:
+                    if requs.status == 200:
                         soup = BeautifulSoup(await requs.text(), 'html.parser')
+                        # soup = BeautifulSoup(await requs.text(), features="lxml")
                 await session.close()
                 return soup
+
         urls = [link.get('href') for link in asyncio.run(activet_url(url)).find_all('a')]
-        urls_contact = [i for i in set([get_specific_url for get_specific_url in set(urls)
-                                        if "location" in str(get_specific_url)
-                                        or "contact" in str(get_specific_url)
-                                        or "about" in str(get_specific_url)
-                                        or "store" in str(get_specific_url)
-                                        or "main" in str(get_specific_url)
-                                        or "facebook" in str(get_specific_url)
-                                        or "instagram" in str(get_specific_url)
-                                        or "yelp" in str(get_specific_url)
-                                        or "tripadvisor" in str(get_specific_url)])]
+        # urls_contact = [i for i in set([get_specific_url for get_specific_url in set(urls)
+        #                                 if "location" in str(get_specific_url)
+        #                                 or "contact" in str(get_specific_url)
+        #                                 or "about" in str(get_specific_url)
+        #                                 or "store" in str(get_specific_url)
+        #                                 or "main" in str(get_specific_url)
+        #                                 or "facebook" in str(get_specific_url)
+        #                                 or "instagram" in str(get_specific_url)
+        #                                 or "yelp" in str(get_specific_url)
+        #                                 or "tripadvisor" in str(get_specific_url)])]
+        urls_contact = [i for i in set([get_specific_url
+                                        for get_specific_url in set(urls)
+                                        if re.findall(
+                "location|contact|about|store|main|facebook|instagram|yelp|tripadvisor", get_specific_url)])]
 
         if len([i for i in urls_contact if re.findall("^[a-z]|/", (str(i)))]) >= 1:
             get_d = [None if re.findall(r"http", str(i)) or re.findall(r"/", str(i)) else "/" + i
@@ -58,12 +65,14 @@ def get_all_text(all_urls):
     get_filter_url = [i for i in all_urls if not re.findall(r"instagram|yelp|tripadvisor", i)]
     store_number_info = []
     soup = [BeautifulSoup(requests.get(txt).text, 'html.parser') for txt in get_filter_url]
-    get_string = re.findall(r"[A-Za-z\w'a-z-&A-Za-z]+|[0-9]+", str(soup).strip())
+    get_string = re.findall(r"[A-Za-z\wa-z-&A-Za-z]+|[0-9]+", str(soup).strip())
     get_num = re.findall(r"[0-9]+", str(soup).strip())
     store_number_info.append(get_string)
     comdine_text_value = [j for i in store_number_info for j in i]
     return comdine_text_value, get_num
 
 
-get_v = njit()(get_all_urls)
-get_l = njit()(get_all_text)
+get_v = jit()(get_all_urls)
+get_l = jit()(get_all_text)
+
+

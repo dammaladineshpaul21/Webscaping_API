@@ -19,13 +19,13 @@ class Payload(Resource):
         self.urlobject2 = self.data.get("url", None)
         self.name_object = self.data.get("name", None)
         self.phone_number_list = self.data.get("phone_number", None)
+        self.url_object = get_all_urls(self.data.get("url"))
 
 
 class Varify_name(Payload):
 
     def __init__(self):
         super().__init__()
-        self.url_object = get_all_urls(self.data.get("url"))
         self.error_page = asyncio.run(error_check(self.url_object[0]))
         self.url_object_string = get_all_text(self.url_object)[0]
         self.call_mixed_name = asyncio.run(mixed_name(self.data["name"], self.url_object_string))
