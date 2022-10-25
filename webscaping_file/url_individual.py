@@ -7,7 +7,6 @@ import aiohttp
 import urllib3
 from numba import jit
 
-
 urllib3.disable_warnings()
 
 
@@ -75,4 +74,4 @@ def get_all_text(all_urls):
 get_v = jit()(get_all_urls)
 get_l = jit()(get_all_text)
 
-
+print(get_all_urls("https://www.facebook.com/munna.dammala"))
