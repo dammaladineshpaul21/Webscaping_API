@@ -1,5 +1,5 @@
+from webscaping_file.url_individual import *
 import asyncio
-import re
 import aiohttp
 from bs4 import BeautifulSoup
 
@@ -31,14 +31,15 @@ async def get_ow_number(url):
             async with session.get(url, ssl=True) as requs:
                 soup = BeautifulSoup(await requs.text(), 'html.parser')
             await session.close()
-            phone_pattern = [r"\d{3}\W\d{3}\W\d{4}/\d{4}", r"\(\d{3}\) \d{3}-\d{4}",
-                             r"\d{3}\W\d{3}\W\d{4}|\d{1}-\d{3}-\d{3}-\d{4}"]
-            store_phone_number = []
-            for i in range(len(phone_pattern)):
-                if re.findall(phone_pattern[i], str(soup)):
-                    store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
-            await asyncio.sleep(0.5)
-            return store_phone_number
+        phone_pattern = [r"\d{3}\W\d{3}\W\d{4}/\d{4}", r"\(\d{3}\) \d{3}-\d{4}",
+                         r"\d{3}\W\d{3}\W\d{4}|\d{1}-\d{3}-\d{3}-\d{4}"]
+        store_phone_number = []
+        for i in range(len(phone_pattern)):
+            if re.findall(phone_pattern[i], str(soup)):
+                # store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
+                store_phone_number.append(list(set(re.findall(phone_pattern[i], str(soup)))))
+        await asyncio.sleep(0.25)
+        return store_phone_number
     except Exception as e:
         await asyncio.sleep(0.5)
         return e
@@ -49,9 +50,11 @@ async def get_number_list(numbers_list):
     and filter all the Spacial Character from the single number the
     and give a raw string of only containing number."""
     try:
-        filter_number = re.findall(r"[0-9]+", numbers_list)
-        await asyncio.sleep(0.0)
+        filter_number = "".join(reversed(" ".join(reversed(re.findall(r"[0-9]", numbers_list))).replace(" ", "")[0:10]))
+        await asyncio.sleep(0.25)
         return " ".join(filter_number).replace(" ", "")
     except Exception as e:
-        await asyncio.sleep(0.0)
+        await asyncio.sleep(0.25)
         return e
+    finally:
+        pass
